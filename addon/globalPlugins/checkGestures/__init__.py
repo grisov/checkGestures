@@ -2,7 +2,7 @@
 # A part of the NVDA Check Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
-# Copyright (C) 2020 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+# Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
 import addonHandler
 from logHandler import log
@@ -23,7 +23,8 @@ from globalVars import appArgs
 import gui, wx
 import config
 from scriptHandler import script
-from .base import Gestures
+from .base import Duplicates
+from .graphui import GesturesListDialog
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -35,21 +36,25 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super(GlobalPlugin, self).__init__(*args, **kwargs)
 		if appArgs.secure or config.isAppX:
 			return
-		self.addMenuItem()
+		self.addMenu()
 
-	def addMenuItem(self) -> None:
+	def addMenu(self) -> None:
+		"""Build a submenu in the "tools" menu."""
 		self.menu = gui.mainFrame.sysTrayIcon.toolsMenu
-		self.menuItem = self.menu.Append(wx.ID_ANY, addonSummary)
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onMenuItem, self.menuItem)
+		subMenu = wx.Menu()
+		self.mainItem = self.menu.AppendSubMenu(subMenu, addonSummary)
+		# Translators: the name of a submenu item
+		checkDuplicatesItem = subMenu.Append(wx.ID_ANY, Duplicates().menuItem)
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckDuplicates, checkDuplicatesItem)
 
 	def terminate(self, *args, **kwargs):
 		"""This will be called when NVDA is finished with this global plugin"""
 		super().terminate(*args, **kwargs)
 		try:
-			self.toolsMenu.Remove(self.menuItem)
+			self.menu.Remove(self.mainItem)
 		except (RuntimeError, AttributeError):
 			pass
 
-	def onMenuItem(self, event) -> None:
-		gestures = Gestures()
-		gestures.initialize()
+	def onCheckDuplicates(self, event) -> None:
+		gld = GesturesListDialog(parent=gui.mainFrame, id=wx.ID_ANY, title=Duplicates().title, gestures=Duplicates())
+		gui.runScriptModalDialog(gld)

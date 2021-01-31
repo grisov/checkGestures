@@ -1,9 +1,9 @@
-#gestures.py
+	#base.py
 # Components required to work with input gestures collection
 # A part of the NVDA Check Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
-# Copyright (C) 2020 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+# Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
 
 class Gesture(object):
@@ -91,17 +91,47 @@ class Gestures(object):
 		import globalPluginHandler
 		for plugin in globalPluginHandler.runningPlugins:
 			for gest,obj in plugin._gestureMap.items():
-				gesture = Gesture(
-					gesture = gest,
-					displayName = obj.__doc__,
-					moduleName = obj.__module__,
-					scriptName = obj.__name__.replace("script_", '')
-				)
-				self.append(gesture)
+				if obj and not obj.__doc__:
+					gesture = Gesture(
+						gesture = gest,
+						displayName = obj.__doc__,
+						moduleName = obj.__module__,
+						scriptName = obj.__name__.replace("script_", '')
+					)
+					self.append(gesture)
 
-	def duplicates(self):
+
+class FilteredGestures(object):
+
+	def __init__(self, name):
+		self.name = name
+
+	@property
+	def title(self):
+		return self.name.replace('&', '')
+
+	@property
+	def menuItem(self):
+		return self.name + "..."
+
+	def __len__(self):
+		return len([item for item in self])
+
+	def __iter__(self):
+		raise NotImplementedError
+
+
+class Duplicates(FilteredGestures):
+
+	def __init__(self):
+		# Translators: The title of the gestures list dialog and menu item
+		super(Duplicates, self).__init__(_("Search for &duplicate gestures"))
+
+	def __iter__(self):
 		import config
-		collection = [item.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '') for item in self._all]
-		for gest in self._all:
+		gestures = Gestures()
+		gestures.initialize()
+		collection = [item.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '') for item in gestures]
+		for gest in gestures:
 			if collection.count(gest.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], ''))>1:
 				yield gest
