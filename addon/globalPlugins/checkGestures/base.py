@@ -1,9 +1,16 @@
 	#base.py
 # Components required to work with input gestures collection
-# A part of the NVDA Check Gestures add-on
+# A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+
+import addonHandler
+from logHandler import log
+try:
+	addonHandler.initTranslation()
+except addonHandler.AddonError:
+	log.warning("Unable to initialise translations. This may be because the addon is running from NVDA scratchpad.")
 
 
 class Gesture(object):
@@ -103,7 +110,7 @@ class Gestures(object):
 
 class FilteredGestures(object):
 
-	def __init__(self, name):
+	def __init__(self, name: str):
 		self.name = name
 
 	@property

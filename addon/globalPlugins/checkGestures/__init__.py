@@ -1,5 +1,5 @@
 ﻿#-*- coding:utf-8 -*-
-# A part of the NVDA Check Gestures add-on
+# A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
@@ -43,7 +43,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.menu = gui.mainFrame.sysTrayIcon.toolsMenu
 		subMenu = wx.Menu()
 		self.mainItem = self.menu.AppendSubMenu(subMenu, addonSummary)
-		# Translators: the name of a submenu item
 		checkDuplicatesItem = subMenu.Append(wx.ID_ANY, Duplicates().menuItem)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckDuplicates, checkDuplicatesItem)
 
@@ -55,5 +54,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		except (RuntimeError, AttributeError):
 			pass
 
+	def checkGestures(self, gestures):
+		if len(gestures)>0:
+			wx.CallAfter(GesturesListDialog.showDialog, title=gestures.title, gestures=gestures)
+		else:
+			# Translators: Notification of no search results
+			gui.messageBox(_("Target gestures not found"),
+				caption=gestures.title,
+				parent=gui.mainFrame)
+
 	def onCheckDuplicates(self, event) -> None:
-		wx.CallAfter(GesturesListDialog.showDialog, title=Duplicates().title, gestures=Duplicates())
+		self.checkGestures(Duplicates())
