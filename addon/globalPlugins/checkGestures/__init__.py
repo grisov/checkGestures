@@ -56,5 +56,4 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			pass
 
 	def onCheckDuplicates(self, event) -> None:
-		gld = GesturesListDialog(parent=gui.mainFrame, id=wx.ID_ANY, title=Duplicates().title, gestures=Duplicates())
-		gui.runScriptModalDialog(gld)
+		wx.CallAfter(GesturesListDialog.showDialog, title=Duplicates().title, gestures=Duplicates())

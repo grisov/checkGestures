@@ -8,12 +8,50 @@
 import wx
 import gui
 from gui.nvdaControls import AutoWidthColumnListCtrl
+from gui.inputGestures import InputGesturesDialog
+from inputCore import getDisplayTextForGestureIdentifier
+from tones import beep
 
 
-class GesturesListDialog(wx.Dialog):
+class InputGesturesDialogWithSearch(InputGesturesDialog):
 
-	def __init__(self, parent, id: int, title: str, gestures, *args, **kwargs):
-		super(GesturesListDialog, self).__init__(parent, id, title=title, *args, **kwargs)
+	def __init__(self, parent, search: str='', *args, **kwargs):
+		super(InputGesturesDialogWithSearch, self).__init__(parent, *args, **kwargs)
+		search and self.filterCtrl.SetValue(search)
+
+
+class SingletonDialog(wx.Dialog):
+	instance = None
+
+	def __new__(cls, *args, **kwargs):
+		if cls.instance is None:
+			return super(SingletonDialog, cls).__new__(cls, *args, **kwargs)
+		return cls.instance
+
+	def __init__(self, *args, **kwargs):
+		if self.__class__.instance is None:
+			self.__class__.instance = self
+			super(SingletonDialog, self).__init__(parent=gui.mainFrame, id=wx.ID_ANY, *args, **kwargs)
+
+	def onClose(self, event):
+		self.__class__.instance = None
+		self.Destroy()
+
+	def __del__(self):
+		self.__class__.instance = None
+
+	@classmethod
+	def showDialog(cls, *args, **kwargs):
+		gui.mainFrame.prePopup()
+		dlg = cls(*args, **kwargs)
+		dlg and dlg.Show()
+		gui.mainFrame.postPopup()
+
+
+class GesturesListDialog(SingletonDialog):
+
+	def __init__(self, title: str, gestures, *args, **kwargs):
+		super(GesturesListDialog, self).__init__(title=title, *args, **kwargs)
 		sizer = wx.BoxSizer(wx.VERTICAL)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=sizer)
 		self.gesturesList = sHelper.addLabeledControl(
@@ -25,11 +63,11 @@ class GesturesListDialog(wx.Dialog):
 			style=wx.LC_REPORT | wx.LC_SINGLE_SEL
 		)
 		# Translators: The label for a column in the list of gestures
-		self.gesturesList.InsertColumn(0, _("Gesture"), width=100)
+		self.gesturesList.InsertColumn(0, _("Gesture"), width=150)
 		# Translators: The label for a column in the list of gestures
 		self.gesturesList.InsertColumn(1, _("Function description or script name"))
 		# Translators: The label for a column in the list of gestures
-		self.gesturesList.InsertColumn(2, _("Category"), width=100)
+		self.gesturesList.InsertColumn(2, _("Category"), width=150)
 
 		# Buttons at the bottom of the dialog box
 		buttons = wx.BoxSizer(wx.HORIZONTAL)
@@ -42,16 +80,17 @@ class GesturesListDialog(wx.Dialog):
 		self.SetSizer(sizer)
 		self.Center(wx.BOTH | wx.Center)
 
-		# Fill in the list of available services
+		# Fill in the list of available input gestures
+		gestureDisplayText = lambda gest: "{1} ({0})".format(*getDisplayTextForGestureIdentifier(gest))
 		for gesture in sorted(gestures, key=lambda x: x.gesture):
-			self.gesturesList.Append((gesture.gesture, gesture.displayName or gesture.scriptName, gesture.category or gesture.moduleName))
+			self.gesturesList.Append((gestureDisplayText(gesture.gesture), gesture.displayName or gesture.scriptName, gesture.category or f"[{gesture.moduleName}]"))
 		self.gesturesList.SetFocus()
 		self.gesturesList.Focus(0)
 		self.gesturesList.Select(0)
 
 		# Binding dialog box elements to handler methods
-		self.gesturesList.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onSelectGesture)
-		self.okButton.Bind(wx.EVT_BUTTON, self.onSelectGesture)
+		self.gesturesList.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.onActivateItem)
+		self.okButton.Bind(wx.EVT_BUTTON, self.onActivateItem)
 		self.Bind(wx.EVT_CHAR_HOOK, self.onKeyPress)
 
 	def onKeyPress(self, event) -> None:
@@ -63,12 +102,15 @@ class GesturesListDialog(wx.Dialog):
 		event.Skip()
 		#self.Close()
 
-	def onSelectGesture(self, event) -> None:
+	def onActivateItem(self, event) -> None:
 		"""Activation of the selected online service.
 		@param event: event binder object that handles the activation of the button or ListItem element
 		@type event: wx.core.PyEventBinder
 		"""
 		event.Skip()
-		from tones import beep
-		beep(3333, 33)
-		#self.Close()
+		category = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
+		if category.startswith('[') and category.endswith(']'):
+			beep(3333, 33)
+		else:
+			gui.mainFrame._popupSettingsDialog(InputGesturesDialogWithSearch, search=self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1))
+			self.Close()
