@@ -41,6 +41,8 @@ class SingletonDialog(wx.Dialog):
 
 	def onClose(self, event):
 		self.__class__.instance = None
+		from tones import beep
+		beep(3333, 100)
 		self.Destroy()
 
 	def __del__(self):

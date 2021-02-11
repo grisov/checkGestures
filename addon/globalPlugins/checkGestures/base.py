@@ -55,7 +55,7 @@ class Gestures(object):
 	def __len__(self) -> int:
 		return self._all.__len__()
 
-	def __getitem__(self, index: int):
+	def __getitem__(self, index: int) -> Gesture:
 		return self._all[index]
 
 	def __iter__(self):
@@ -142,3 +142,18 @@ class Duplicates(FilteredGestures):
 		for gest in gestures:
 			if collection.count(gest.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], ''))>1:
 				yield gest
+
+
+class Unsigned(FilteredGestures):
+
+	def __init__(self):
+		# Translators: The title of the gestures list dialog and menu item
+		super(Unsigned, self).__init__(_("Gestures &without description"))
+
+	def __iter__(self):
+		import config
+		gestures = Gestures()
+		gestures.unsigned()
+		collection = [item.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '') for item in gestures]
+		for gest in gestures:
+			yield gest

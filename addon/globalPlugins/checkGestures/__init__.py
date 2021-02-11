@@ -23,7 +23,7 @@ from globalVars import appArgs
 import gui, wx
 import config
 from scriptHandler import script
-from .base import Duplicates
+from .base import Duplicates, Unsigned
 from .graphui import GesturesListDialog
 
 
@@ -45,6 +45,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.mainItem = self.menu.AppendSubMenu(subMenu, addonSummary)
 		checkDuplicatesItem = subMenu.Append(wx.ID_ANY, Duplicates().menuItem)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckDuplicates, checkDuplicatesItem)
+		checkUnsignedItem = subMenu.Append(wx.ID_ANY, Unsigned().menuItem)
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckUnsigned, checkUnsignedItem)
 
 	def terminate(self, *args, **kwargs):
 		"""This will be called when NVDA is finished with this global plugin"""
@@ -64,4 +66,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				parent=gui.mainFrame)
 
 	def onCheckDuplicates(self, event) -> None:
+		event.Skip()
 		self.checkGestures(Duplicates())
+
+	def onCheckUnsigned(self, event) -> None:
+		event.Skip()
+		self.checkGestures(Unsigned())

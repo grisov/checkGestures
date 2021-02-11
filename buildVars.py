@@ -25,7 +25,7 @@ addon_info = {
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description": _("""Find and fix gesture conflicts in NVDA and in add-ons."""),
 	# version
-	"addon_version": "1.0",
+	"addon_version": "1.0-dev",
 	# Author(s)
 	"addon_author": "Oleksandr Gryshchenko <grisov.nvaccess@mailnull.com>",
 	# URL for the add-on documentation support
