@@ -58,7 +58,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def checkGestures(self, gestures):
 		if len(gestures)>0:
-			wx.CallAfter(GesturesListDialog.showDialog, title=gestures.title, gestures=gestures)
+			gui.runScriptModalDialog(GesturesListDialog(parent=gui.mainFrame, title=gestures.title, gestures=gestures))
 		else:
 			# Translators: Notification of no search results
 			gui.messageBox(_("Target gestures not found"),
