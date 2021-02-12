@@ -47,6 +47,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckDuplicates, checkDuplicatesItem)
 		checkUnsignedItem = subMenu.Append(wx.ID_ANY, Unsigned().menuItem)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckUnsigned, checkUnsignedItem)
+		# Translators: the name of a submenu item
+		helpItem = subMenu.Append(wx.ID_ANY, _("&Help"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onHelp, helpItem)
+
+	def onHelp(self, event) -> None:
+		"""Open the add-on help page in the default browser.
+		"""
+		import webbrowser
+		webbrowser.open(curAddon.getDocFilePath())
 
 	def terminate(self, *args, **kwargs):
 		"""This will be called when NVDA is finished with this global plugin"""
