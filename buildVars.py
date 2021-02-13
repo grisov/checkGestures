@@ -23,7 +23,7 @@ addon_info = {
 	"addon_summary": _("Check Input Gestures"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description": _("""Find and fix gesture conflicts in NVDA and in add-ons."""),
+	"addon_description": _("""Find and fix input gestures conflicts in NVDA and add-ons."""),
 	# version
 	"addon_version": "1.0-dev",
 	# Author(s)
