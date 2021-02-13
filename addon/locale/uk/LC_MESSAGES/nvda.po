@@ -1,0 +1,71 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 'checkGestures' '1.0-dev'\n"
+"Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
+"POT-Creation-Date: 2021-02-13 21:58+0200\n"
+"PO-Revision-Date: 2021-02-14 00:37+0200\n"
+"Last-Translator: Oleksandr Gryshchenko <grisov.nvaccess@mailnull.com>\n"
+"Language-Team: Ukrainian Language Team\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#. Translators: the name of a submenu item
+msgid "&Help"
+msgstr "До&відка"
+
+#. Translators: Notification of no search results
+msgid "Target gestures not found"
+msgstr "Цільові жести вводу не знайдено"
+
+#. Translators: The title of the gestures list dialog and menu item
+msgid "Search for &duplicate gestures"
+msgstr "Пошук жестів, що &дублюються"
+
+#. Translators: The title of the gestures list dialog and menu item
+msgid "Gestures &without description"
+msgstr "Жести без &опису"
+
+#. Translators: Label above the list of found gestures
+msgid "Select a gesture from the list"
+msgstr "Виберіть жест зі списку"
+
+#. Translators: The label for a first column in the list of gestures
+msgid "Gesture"
+msgstr "Жест"
+
+#. Translators: The label for the second column in the list of gestures
+msgid "Script description or function name"
+msgstr "Опис сценарію або назва функції"
+
+#. Translators: The label for the third column in the list of gestures
+msgid "Category"
+msgstr "Категорія"
+
+#. Translators: The message that reports about the absence of the selected gesture in the NVDA Input Gestures dialog
+msgid "This gesture is not represented in the NVDA Input Gestures dialog."
+msgstr "Цей жест не відображається у діалоговому вікні Жести вводу NVDA."
+
+#. Translators: The title of the window that reports the lack of description of the selected gesture
+msgid "Gesture without description"
+msgstr "Жест без опису"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+msgid "Check Input Gestures"
+msgstr "Перевірка жестів вводу"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+msgid "Find and fix input gestures conflicts in NVDA and add-ons."
+msgstr "Пошук та виправлення конфліктів жестів вводу в NVDA та додатках."
