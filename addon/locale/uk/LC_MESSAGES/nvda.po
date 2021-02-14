@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 'checkGestures' '1.0-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
 "POT-Creation-Date: 2021-02-13 21:58+0200\n"
-"PO-Revision-Date: 2021-02-14 00:37+0200\n"
+"PO-Revision-Date: 2021-02-14 23:29+0200\n"
 "Last-Translator: Oleksandr Gryshchenko <grisov.nvaccess@mailnull.com>\n"
 "Language-Team: Ukrainian Language Team\n"
 "Language: uk_UA\n"
@@ -19,14 +19,6 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#. Translators: the name of a submenu item
-msgid "&Help"
-msgstr "До&відка"
-
-#. Translators: Notification of no search results
-msgid "Target gestures not found"
-msgstr "Цільові жести вводу не знайдено"
-
 #. Translators: The title of the gestures list dialog and menu item
 msgid "Search for &duplicate gestures"
 msgstr "Пошук жестів, що &дублюються"
@@ -34,6 +26,14 @@ msgstr "Пошук жестів, що &дублюються"
 #. Translators: The title of the gestures list dialog and menu item
 msgid "Gestures &without description"
 msgstr "Жести без &опису"
+
+#. Translators: the name of a submenu item
+msgid "&Help"
+msgstr "До&відка"
+
+#. Translators: Notification of no search results
+msgid "Target gestures not found"
+msgstr "Цільові жести вводу не знайдено"
 
 #. Translators: Label above the list of found gestures
 msgid "Select a gesture from the list"

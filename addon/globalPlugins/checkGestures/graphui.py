@@ -21,20 +21,36 @@ from inputCore import getDisplayTextForGestureIdentifier
 
 
 class InputGesturesDialogWithSearch(InputGesturesDialog):
+	"""Overridden standard NVDA Input Gestures dialog with search at initialization."""
 
 	def __init__(self, parent, search: str='', *args, **kwargs):
+		"""Initialization of the Input Gestures dialog with a search query.
+		@param search: search query
+		@type search: str
+		"""
 		super(InputGesturesDialogWithSearch, self).__init__(parent, *args, **kwargs)
 		search and self.filterCtrl.SetValue(search)
 
 
 class GesturesListDialog(SettingsDialog):
+	"""Dialog window to display a collection of input gestures."""
 
-	def __init__(self, title, gestures, *args, **kwargs):
+	def __init__(self, title: str, gestures: "base.FilteredGestures", *args, **kwargs):
+		"""Initialization of the graphical dialog.
+		@param title: the title of the dialog
+		@type title: str
+		@param gestures: collection of the filtered input gestures
+		@type gestures: base.FilteredGestures
+		"""
 		self.title = title
 		self.gestures = gestures
 		super(GesturesListDialog, self).__init__(*args, **kwargs)
 
-	def makeSettings(self, sizer):
+	def makeSettings(self, sizer: wx.Sizer) -> None:
+		"""Populate the dialog with WX controls.
+		@param sizer: The sizer to which to add the WX controls.
+		@type sizer: wx.Sizer
+		"""
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=sizer)
 		self.gesturesList = sHelper.addLabeledControl(
 			# Translators: Label above the list of found gestures
@@ -62,18 +78,18 @@ class GesturesListDialog(SettingsDialog):
 		self.gesturesList.Focus(0)
 		self.gesturesList.Select(0)
 
-	def _enterActivatesOk_ctrlSActivatesApply(self, event) -> None:
+	def _enterActivatesOk_ctrlSActivatesApply(self, event: wx._core.PyEvent) -> None:
 		"""Performed when pressing keys.
 		@param event: event binder object that handles keystrokes
-		@type event: wx.core.PyEventBinder
+		@type event: wx._core.PyEvent
 		"""
 		key = event.GetKeyCode()
 		super(GesturesListDialog, self)._enterActivatesOk_ctrlSActivatesApply(event)
 
-	def onOk(self, event) -> None:
+	def onOk(self, event: wx._core.PyEvent) -> None:
 		"""Activation of the selected online service.
-		@param event: event binder object that handles the activation of the button or ListItem element
-		@type event: wx.core.PyEventBinder
+		@param event: event binder object that handles the activation of the OK button
+		@type event: wx._core.PyEvent
 		"""
 		event.Skip()
 		category = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
@@ -87,5 +103,6 @@ class GesturesListDialog(SettingsDialog):
 			self.Destroy()
 			gui.mainFrame._popupSettingsDialog(InputGesturesDialogWithSearch, search=self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1))
 
-	def postInit(self):
+	def postInit(self) -> None:
+		"""Called after the dialog has been created."""
 		self.gesturesList.SetFocus()

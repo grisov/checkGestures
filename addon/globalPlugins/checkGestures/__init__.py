@@ -23,8 +23,18 @@ from globalVars import appArgs
 import gui, wx
 import config
 from scriptHandler import script
-from .base import Duplicates, Unsigned
+from . import base
 from .graphui import GesturesListDialog
+
+
+class Duplicates(base.Duplicates):
+	# Translators: The title of the gestures list dialog and menu item
+	name = _("Search for &duplicate gestures")
+
+
+class Unsigned(base.Unsigned):
+	# Translators: The title of the gestures list dialog and menu item
+	name = _("Gestures &without description")
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -32,14 +42,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = addonSummary
 
 	def __init__(self, *args, **kwargs):
-		"""Initialization of the add-on."""
+		"""Initialization of the add-on global plugin."""
 		super(GlobalPlugin, self).__init__(*args, **kwargs)
 		if appArgs.secure or config.isAppX:
 			return
-		self.addMenu()
+		self.createMenu()
 
-	def addMenu(self) -> None:
-		"""Build a submenu in the "tools" menu."""
+	def createMenu(self) -> None:
+		"""Build a submenu in the NVDA "tools" menu."""
 		self.menu = gui.mainFrame.sysTrayIcon.toolsMenu
 		subMenu = wx.Menu()
 		self.mainItem = self.menu.AppendSubMenu(subMenu, addonSummary)
@@ -51,13 +61,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		helpItem = subMenu.Append(wx.ID_ANY, _("&Help"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onHelp, helpItem)
 
-	def onHelp(self, event) -> None:
-		"""Open the add-on help page in the default browser.
-		"""
-		import webbrowser
-		webbrowser.open(curAddon.getDocFilePath())
-
-	def terminate(self, *args, **kwargs):
+	def terminate(self, *args, **kwargs) -> None:
 		"""This will be called when NVDA is finished with this global plugin"""
 		super().terminate(*args, **kwargs)
 		try:
@@ -65,7 +69,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		except (RuntimeError, AttributeError):
 			pass
 
-	def checkGestures(self, gestures):
+	def checkGestures(self, gestures: base.Gestures) -> None:
+		"""Show a list of gestures in a separate window,
+		if the gesture collection is empty, a warning is displayed.
+		@param gestures: collection of input gestures
+		@type gestures: .base.Gestures
+		"""
 		if len(gestures)>0:
 			gui.runScriptModalDialog(GesturesListDialog(parent=gui.mainFrame, title=gestures.title, gestures=gestures))
 		else:
@@ -74,10 +83,26 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				caption=gestures.title,
 				parent=gui.mainFrame)
 
-	def onCheckDuplicates(self, event) -> None:
+	def onCheckDuplicates(self, event: wx._core.PyEvent) -> None:
+		"""Show the collection of duplicate gestures in separate window.
+		@param event: event binder object that specifies the activation of wx.Menu item
+		@type event: wx._core.PyEvent
+		"""
 		event.Skip()
 		self.checkGestures(Duplicates())
 
-	def onCheckUnsigned(self, event) -> None:
+	def onCheckUnsigned(self, event: wx._core.PyEvent) -> None:
+		"""Show the collection of gestures wich binded to features without description in separate window.
+		@param event: event binder object that specifies the activation of wx.Menu item
+		@type event: wx._core.PyEvent
+		"""
 		event.Skip()
 		self.checkGestures(Unsigned())
+
+	def onHelp(self, event: wx._core.PyEvent) -> None:
+		"""Open the add-on help page in the default browser.
+		@param event: event binder object that specifies the activation of wx.Menu item
+		@type event: wx._core.PyEvent
+		"""
+		import webbrowser
+		webbrowser.open(curAddon.getDocFilePath())
