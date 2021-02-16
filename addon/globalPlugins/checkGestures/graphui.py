@@ -5,6 +5,7 @@
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
+from __future__ import annotations
 import addonHandler
 from logHandler import log
 try:
@@ -23,9 +24,11 @@ from inputCore import getDisplayTextForGestureIdentifier
 class InputGesturesDialogWithSearch(InputGesturesDialog):
 	"""Overridden standard NVDA Input Gestures dialog with search at initialization."""
 
-	def __init__(self, parent, search: str='', *args, **kwargs):
+	def __init__(self, parent: wx.Window, search: str='', *args, **kwargs) -> None:
 		"""Initialization of the Input Gestures dialog with a search query.
-		@param search: search query
+		@param parent: The parent for this dialog.
+		@type parent: wx.Window
+		@param search: Search query.
 		@type search: str
 		"""
 		super(InputGesturesDialogWithSearch, self).__init__(parent, *args, **kwargs)
@@ -35,7 +38,7 @@ class InputGesturesDialogWithSearch(InputGesturesDialog):
 class GesturesListDialog(SettingsDialog):
 	"""Dialog window to display a collection of input gestures."""
 
-	def __init__(self, title: str, gestures: "base.FilteredGestures", *args, **kwargs):
+	def __init__(self, title: str, gestures: "base.FilteredGestures", *args, **kwargs) -> None:
 		"""Initialization of the graphical dialog.
 		@param title: the title of the dialog
 		@type title: str

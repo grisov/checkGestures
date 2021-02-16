@@ -4,6 +4,7 @@
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
+from __future__ import annotations
 import addonHandler
 from logHandler import log
 try:
@@ -41,7 +42,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	"""Implementation global commands of NVDA add-on"""
 	scriptCategory = addonSummary
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, *args, **kwargs) -> None:
 		"""Initialization of the add-on global plugin."""
 		super(GlobalPlugin, self).__init__(*args, **kwargs)
 		if appArgs.secure or config.isAppX:

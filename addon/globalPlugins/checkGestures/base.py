@@ -5,24 +5,32 @@
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
+from __future__ import annotations
+from typing import Optional, List, Iterable
+
 
 class Gesture(object):
 	"""Representation of one input gesture."""
 
-	def __init__(self, gesture: str, category: str=None, displayName: str=None, className: str=None, moduleName: str=None, scriptName: str=None):
+	def __init__(self, gesture: str,
+		category: Optional[str]=None,
+		displayName: Optional[str]=None,
+		className: Optional[str]=None,
+		moduleName: Optional[str]=None,
+		scriptName: Optional[str]=None) -> None:
 		"""Initialization of the main fields of the gesture description.
 		@param gesture: text representation of the input gesture
 		@type gesture: str
 		@param category: the category to which the gesture-related function belongs
-		@type category: str
+		@type category: Optional[str]
 		@param displayName: description of the gesture-related function
-		@type displayName: str
+		@type displayName: Optional[str]
 		@param className: the name of the class to which the gesture-related function belongs
-		@type className: str
+		@type className: Optional[str]
 		@param moduleName: the name of the module to which the associated class belongs
-		@type moduleName: str
+		@type moduleName: Optional[str]
 		@param scriptName: the script name of the gesture-bound function
-		@type scriptName: str
+		@type scriptName: Optional[str]
 		"""
 		self._gesture = gesture or ''
 		self._category = category or ''
@@ -47,7 +55,7 @@ class Gesture(object):
 	moduleName = property(moduleName)
 	scriptName = property(scriptName)
 
-	def __eq__(self, other: "Gesture") -> bool:
+	def __eq__(self, other: Gesture) -> bool:
 		"""Comparison of objects for equality.
 		@param other: an object that represents another input gesture
 		@type other: Gesture
@@ -70,9 +78,9 @@ class Gesture(object):
 class Gestures(object):
 	"""Presentation of the input gestures collection."""
 
-	def __init__(self):
+	def __init__(self) -> None:
 		"""Initialization of internal fields."""
-		self._all = []
+		self._all: List[Gesture] = []
 
 	def __len__(self) -> int:
 		"""The number of gestures in collection.
@@ -90,18 +98,18 @@ class Gestures(object):
 		"""
 		return self._all[index]
 
-	def __iter__(self) -> "generator[Gesture]":
-		"""Generator of Gesture objects from collection.
+	def __iter__(self) -> Iterable[Gesture]:
+		"""Iterator of Gesture objects from collection.
 		@return: all Gesture objects from collection
-		@rtype: generator[Gesture]
+		@rtype: Iterable[Gesture]
 		"""
 		for gesture in self._all:
 			yield gesture
 
-	def __contains__(self, obj: Gesture) -> bool:
+	def __contains__(self, obj: Optional[Gesture]) -> bool:
 		"""Indication of whether an Gesture object is present in the collection.
 		@param obj: gesture object to search in the collection
-		@type obj: Gesture
+		@type obj: Optional[Gesture]
 		@return: whether there is an object in the collection
 		@rtype: bool
 		"""
@@ -167,16 +175,22 @@ class Gestures(object):
 
 class FilteredGestures(object):
 	"""Basic class for filtered collections of input gestures."""
-	name = ""
+	name: str = ""
 
 	@property
-	def title(self):
-		"""The title of the window that displays a list of input gestures from the collection."""
+	def title(self) -> str:
+		"""The title of the window that displays a list of input gestures from the collection.
+		@return: a text string representing the title of the window
+		@rtype: str
+		"""
 		return self.name.replace('&', '')
 
 	@property
-	def menuItem(self):
-		"""The name of the menu item that call the window to display the gesture collection."""
+	def menuItem(self) -> str:
+		"""The name of the menu item that call the window to display the gesture collection.
+		@return: a text string representing the name of the menu item
+		@rtype: str
+		"""
 		return self.name + "..."
 
 	def __len__(self) -> int:
@@ -186,11 +200,11 @@ class FilteredGestures(object):
 		"""
 		return len([item for item in self])
 
-	def __iter__(self) -> "generator[Gesture]":
+	def __iter__(self) -> Iterable[Gesture]:
 		"""Consistently returns input gestures from the collection filtered by a certain property.
 		The method must be overridden in the child class.
-		@return: generator of the filtered input gestures
-		@rtype: generator[Gesture]
+		@return: iterator of the filtered input gestures
+		@rtype: Iterable[Gesture]
 		"""
 		raise NotImplementedError
 
@@ -198,10 +212,10 @@ class FilteredGestures(object):
 class Duplicates(FilteredGestures):
 	"""Collection of duplicate input gestures."""
 
-	def __iter__(self) -> "generator[Gesture]":
+	def __iter__(self) -> Iterable[Gesture]:
 		"""Collection of the duplicated input gestures.
-		@return: generator of the duplicated input gestures
-		@rtype: generator[Gesture]
+		@return: iterator of the duplicated input gestures
+		@rtype: Iterable[Gesture]
 		"""
 		import config
 		gestures = Gestures()
@@ -215,10 +229,10 @@ class Duplicates(FilteredGestures):
 class Unsigned(FilteredGestures):
 	"""Collection of input gestures binded to functions without a text description."""
 
-	def __iter__(self) -> "generator[Gesture]":
+	def __iter__(self) -> Iterable[Gesture]:
 		"""Collection of the unsigned input gestures.
-		@return: generator of the unsigned input gestures
-		@rtype: generator[Gesture]
+		@return: iterator of the unsigned input gestures
+		@rtype: Iterable[Gesture]
 		"""
 		import config
 		gestures = Gestures()
