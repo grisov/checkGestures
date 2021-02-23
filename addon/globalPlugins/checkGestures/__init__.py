@@ -30,17 +30,17 @@ from .graphui import GesturesListDialog
 
 class Duplicates(base.Duplicates):
 	# Translators: The title of the gestures list dialog and menu item
-	name = _("Search for &duplicate gestures")
+	name: str = _("Search for &duplicate gestures")
 
 
 class Unsigned(base.Unsigned):
 	# Translators: The title of the gestures list dialog and menu item
-	name = _("Gestures &without description")
+	name: str = _("Gestures &without description")
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	"""Implementation global commands of NVDA add-on"""
-	scriptCategory = addonSummary
+	scriptCategory: str = addonSummary
 
 	def __init__(self, *args, **kwargs) -> None:
 		"""Initialization of the add-on global plugin."""
