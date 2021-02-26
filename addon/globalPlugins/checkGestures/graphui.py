@@ -5,13 +5,14 @@
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
-from __future__ import annotations
+from typing import Callable
 import addonHandler
 from logHandler import log
 try:
 	addonHandler.initTranslation()
 except addonHandler.AddonError:
 	log.warning("Unable to initialise translations. This may be because the addon is running from NVDA scratchpad.")
+_: Callable[[str], str]
 
 import wx
 import gui
@@ -19,6 +20,7 @@ from gui.settingsDialogs import SettingsDialog
 from gui.nvdaControls import AutoWidthColumnListCtrl
 from gui.inputGestures import InputGesturesDialog
 from inputCore import getDisplayTextForGestureIdentifier
+from .base import FilteredGestures
 
 
 class InputGesturesDialogWithSearch(InputGesturesDialog):
@@ -38,12 +40,15 @@ class InputGesturesDialogWithSearch(InputGesturesDialog):
 class GesturesListDialog(SettingsDialog):
 	"""Dialog window to display a collection of input gestures."""
 
-	def __init__(self, title: str, gestures: "base.FilteredGestures", *args, **kwargs) -> None:
+	def __init__(self,
+		title: str,
+		gestures: FilteredGestures,
+		*args, **kwargs) -> None:
 		"""Initialization of the graphical dialog.
 		@param title: the title of the dialog
 		@type title: str
 		@param gestures: collection of the filtered input gestures
-		@type gestures: base.FilteredGestures
+		@type gestures: FilteredGestures
 		"""
 		self.title = title
 		self.gestures = gestures
@@ -81,18 +86,18 @@ class GesturesListDialog(SettingsDialog):
 		self.gesturesList.Focus(0)
 		self.gesturesList.Select(0)
 
-	def _enterActivatesOk_ctrlSActivatesApply(self, event: wx._core.PyEvent) -> None:
+	def _enterActivatesOk_ctrlSActivatesApply(self, event: wx.PyEvent) -> None:
 		"""Performed when pressing keys.
 		@param event: event binder object that handles keystrokes
-		@type event: wx._core.PyEvent
+		@type event: wx.PyEvent
 		"""
 		key = event.GetKeyCode()
 		super(GesturesListDialog, self)._enterActivatesOk_ctrlSActivatesApply(event)
 
-	def onOk(self, event: wx._core.PyEvent) -> None:
+	def onOk(self, event: wx.PyEvent) -> None:
 		"""Activation of the selected online service.
 		@param event: event binder object that handles the activation of the OK button
-		@type event: wx._core.PyEvent
+		@type event: wx.PyEvent
 		"""
 		event.Skip()
 		category = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)

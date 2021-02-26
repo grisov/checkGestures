@@ -5,14 +5,14 @@
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
-from __future__ import annotations
-from typing import Optional, List, Iterable
+from typing import Optional, List, Generator
 
 
 class Gesture(object):
 	"""Representation of one input gesture."""
 
-	def __init__(self, gesture: str,
+	def __init__(self,
+		gesture: str,
 		category: Optional[str]=None,
 		displayName: Optional[str]=None,
 		className: Optional[str]=None,
@@ -39,29 +39,63 @@ class Gesture(object):
 		self._moduleName = moduleName or ''
 		self._scriptName = scriptName or ''
 
-	# Define methods
-	gesture = lambda self: self._gesture
-	category = lambda self: self._category
-	displayName = lambda self: self._displayName
-	className = lambda self: self._className
-	moduleName = lambda self: self._moduleName
-	scriptName = lambda self: self._scriptName
+	@property
+	def gesture(self) -> str:
+		"""String presentation of the input gesture.
+		@return: input gesture or empty string
+		@rtype: str
+		"""
+		return self._gesture
 
-	# Define properties
-	gesture = property(gesture)
-	category = property(category)
-	displayName = property(displayName)
-	className = property(className)
-	moduleName = property(moduleName)
-	scriptName = property(scriptName)
+	@property
+	def category(self) -> str:
+		"""The category to which the gesture-bound function belongs.
+		@return: the name of the category of the bound function or empty string
+		@rtype: str
+		"""
+		return self._category
 
-	def __eq__(self, other: Gesture) -> bool:
+	@property
+	def displayName(self) -> str:
+		"""Text description of the gesture-bound feature.
+		@return: text description of the function or empty stringn
+		@rtype: str
+		"""
+		return self._displayName
+
+	@property
+	def className(self) -> str:
+		"""Name of the class object.
+		@return: class name or empty string
+		@rtype: str
+		"""
+		return self._className
+
+	@property
+	def moduleName(self) -> str:
+		"""The name of the module to which the class object belongs.
+		@return: module name
+		@rtype: str
+		"""
+		return self._moduleName
+
+	@property
+	def scriptName(self) -> str:
+		"""The name of the function associated with the input gesture.
+		@return: script name
+		@rtype: str
+		"""
+		return self._scriptName
+
+	def __eq__(self, other: object) -> bool:
 		"""Comparison of objects for equality.
 		@param other: an object that represents another input gesture
-		@type other: Gesture
+		@type other: object
 		@return: the result of comparing the expression [self==other]
 		@rtype: bool
 		"""
+		if not isinstance(other, Gesture):
+			return False
 		return self.gesture==other.gesture and \
 			self.displayName==other.displayName and \
 			self.moduleName==other.moduleName and \
@@ -98,10 +132,10 @@ class Gestures(object):
 		"""
 		return self._all[index]
 
-	def __iter__(self) -> Iterable[Gesture]:
-		"""Iterator of Gesture objects from collection.
+	def __iter__(self) -> Generator[Gesture, None, None]:
+		"""Generator of Gesture objects from collection.
 		@return: all Gesture objects from collection
-		@rtype: Iterable[Gesture]
+		@rtype: Generator[Gesture, None, None]
 		"""
 		for gesture in self._all:
 			yield gesture
@@ -200,11 +234,11 @@ class FilteredGestures(object):
 		"""
 		return len([item for item in self])
 
-	def __iter__(self) -> Iterable[Gesture]:
+	def __iter__(self) -> Generator[Gesture, None, None]:
 		"""Consistently returns input gestures from the collection filtered by a certain property.
 		The method must be overridden in the child class.
-		@return: iterator of the filtered input gestures
-		@rtype: Iterable[Gesture]
+		@return: generator of the filtered input gestures
+		@rtype: Generator[Gesture, None, None]
 		"""
 		raise NotImplementedError
 
@@ -212,10 +246,10 @@ class FilteredGestures(object):
 class Duplicates(FilteredGestures):
 	"""Collection of duplicate input gestures."""
 
-	def __iter__(self) -> Iterable[Gesture]:
+	def __iter__(self) -> Generator[Gesture, None, None]:
 		"""Collection of the duplicated input gestures.
-		@return: iterator of the duplicated input gestures
-		@rtype: Iterable[Gesture]
+		@return: generator of the duplicated input gestures
+		@rtype: Generator[Gesture, None, None]
 		"""
 		import config
 		gestures = Gestures()
@@ -229,10 +263,10 @@ class Duplicates(FilteredGestures):
 class Unsigned(FilteredGestures):
 	"""Collection of input gestures binded to functions without a text description."""
 
-	def __iter__(self) -> Iterable[Gesture]:
+	def __iter__(self) -> Generator[Gesture, None, None]:
 		"""Collection of the unsigned input gestures.
-		@return: iterator of the unsigned input gestures
-		@rtype: Iterable[Gesture]
+		@return: generator of the unsigned input gestures
+		@rtype: Generator[Gesture, None, None]
 		"""
 		import config
 		gestures = Gestures()
