@@ -5,7 +5,7 @@
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
-from typing import Optional, List, Generator
+from typing import Optional, List, Iterator
 
 
 class Gesture(object):
@@ -132,10 +132,10 @@ class Gestures(object):
 		"""
 		return self._all[index]
 
-	def __iter__(self) -> Generator[Gesture, None, None]:
-		"""Generator of Gesture objects from collection.
+	def __iter__(self) -> Iterator[Gesture]:
+		"""Iterator of Gesture objects from collection.
 		@return: all Gesture objects from collection
-		@rtype: Generator[Gesture, None, None]
+		@rtype: Iterator[Gesture]
 		"""
 		for gesture in self._all:
 			yield gesture
@@ -234,11 +234,11 @@ class FilteredGestures(object):
 		"""
 		return len([item for item in self])
 
-	def __iter__(self) -> Generator[Gesture, None, None]:
+	def __iter__(self) -> Iterator[Gesture]:
 		"""Consistently returns input gestures from the collection filtered by a certain property.
 		The method must be overridden in the child class.
-		@return: generator of the filtered input gestures
-		@rtype: Generator[Gesture, None, None]
+		@return: iterator of the filtered input gestures
+		@rtype: Iterator[Gesture]
 		"""
 		raise NotImplementedError
 
@@ -246,10 +246,10 @@ class FilteredGestures(object):
 class Duplicates(FilteredGestures):
 	"""Collection of duplicate input gestures."""
 
-	def __iter__(self) -> Generator[Gesture, None, None]:
+	def __iter__(self) -> Iterator[Gesture]:
 		"""Collection of the duplicated input gestures.
-		@return: generator of the duplicated input gestures
-		@rtype: Generator[Gesture, None, None]
+		@return: iterator of the duplicated input gestures
+		@rtype: Iterator[Gesture]
 		"""
 		import config
 		gestures = Gestures()
@@ -263,10 +263,10 @@ class Duplicates(FilteredGestures):
 class Unsigned(FilteredGestures):
 	"""Collection of input gestures binded to functions without a text description."""
 
-	def __iter__(self) -> Generator[Gesture, None, None]:
+	def __iter__(self) -> Iterator[Gesture]:
 		"""Collection of the unsigned input gestures.
-		@return: generator of the unsigned input gestures
-		@rtype: Generator[Gesture, None, None]
+		@return: iterator of the unsigned input gestures
+		@rtype: Iterator[Gesture]
 		"""
 		import config
 		gestures = Gestures()
