@@ -26,6 +26,7 @@ from globalVars import appArgs
 import gui, wx
 import config
 from scriptHandler import script
+from inputCore import InputGesture
 from . import base
 from .graphui import GesturesListDialog
 
@@ -79,7 +80,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@type gestures: base.FilteredGestures
 		"""
 		if len(gestures)>0:
-			gui.runScriptModalDialog(GesturesListDialog(parent=gui.mainFrame, title=gestures.title, gestures=gestures))
+			gui.mainFrame._popupSettingsDialog(GesturesListDialog, title=gestures.title, gestures=gestures)
 		else:
 			# Translators: Notification of no search results
 			gui.messageBox(_("Target gestures not found"),
@@ -91,7 +92,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@param event: event binder object that specifies the activation of wx.Menu item
 		@type event: wx.PyEvent
 		"""
-		event.Skip()
 		self.checkGestures(Duplicates())
 
 	def onCheckUnsigned(self, event: wx.PyEvent) -> None:
@@ -99,7 +99,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@param event: event binder object that specifies the activation of wx.Menu item
 		@type event: wx.PyEvent
 		"""
-		event.Skip()
 		self.checkGestures(Unsigned())
 
 	def onHelp(self, event: wx.PyEvent) -> None:
@@ -109,3 +108,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"""
 		import webbrowser
 		webbrowser.open(curAddon.getDocFilePath())
+
+	@script(description=Duplicates().title)
+	def script_duplicates(self, gesture: InputGesture) -> None:
+		"""Check the NVDA configuration and display all detected duplicated input gestures.
+		@param gesture: the input gesture in question
+		@type gesture: InputGesture
+		"""
+		wx.CallAfter(self.onCheckDuplicates, None)
+
+	@script(description=Unsigned().title)
+	def script_unsigned(self, gesture: InputGesture) -> None:
+		"""Check the NVDA configuration and display all detected unsigned input gestures.
+		@param gesture: the input gesture in question
+		@type gesture: InputGesture
+		"""
+		wx.CallAfter(self.onCheckUnsigned, None)

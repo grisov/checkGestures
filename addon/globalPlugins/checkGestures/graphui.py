@@ -38,13 +38,19 @@ class InputGesturesDialogWithSearch(InputGesturesDialog):
 
 
 class GesturesListDialog(SettingsDialog):
-	"""Dialog window to display a collection of input gestures."""
+	"""Dialog window to display a collection of input gestures.
+	@ivar title: The title of the dialog.
+	@type title: str
+	"""
 
 	def __init__(self,
+		parent: wx.Window,
 		title: str,
 		gestures: FilteredGestures,
 		*args, **kwargs) -> None:
 		"""Initialization of the graphical dialog.
+		@param parent: The parent window for this dialog
+		@type parent: wx.Window
 		@param title: the title of the dialog
 		@type title: str
 		@param gestures: collection of the filtered input gestures
@@ -52,7 +58,7 @@ class GesturesListDialog(SettingsDialog):
 		"""
 		self.title = title
 		self.gestures = gestures
-		super(GesturesListDialog, self).__init__(*args, **kwargs)
+		super(GesturesListDialog, self).__init__(parent, *args, **kwargs)
 
 	def makeSettings(self, sizer: wx.Sizer) -> None:
 		"""Populate the dialog with WX controls.
@@ -86,30 +92,42 @@ class GesturesListDialog(SettingsDialog):
 		self.gesturesList.Focus(0)
 		self.gesturesList.Select(0)
 
-	def _enterActivatesOk_ctrlSActivatesApply(self, event: wx.PyEvent) -> None:
-		"""Performed when pressing keys.
-		@param event: event binder object that handles keystrokes
-		@type event: wx.PyEvent
+	def unsignedGestureWarning(self) -> bool:
+		"""Display the warning if the selected gesture is not presented in the Input Gestures dialog.
+		@return: an indication of whether the selected gesture is not presented in the Input gestures dialog
+		@rtype: bool
 		"""
-		key = event.GetKeyCode()
-		super(GesturesListDialog, self)._enterActivatesOk_ctrlSActivatesApply(event)
-
-	def onOk(self, event: wx.PyEvent) -> None:
-		"""Activation of the selected online service.
-		@param event: event binder object that handles the activation of the OK button
-		@type event: wx.PyEvent
-		"""
-		event.Skip()
-		category = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
-		if category.startswith('[') and category.endswith(']'):
+		category: str = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
+		isUnsigned: bool = category.startswith('[') and category.endswith(']')
+		if isUnsigned:
 			# Translators: The message that reports about the absence of the selected gesture in the NVDA Input Gestures dialog
 			gui.messageBox(_("This gesture is not represented in the NVDA Input Gestures dialog."),
 				# Translators: The title of the window that reports the lack of description of the selected gesture
 				caption=_("Gesture without description"),
 				parent=self)
-		else:
-			self.Destroy()
-			gui.mainFrame._popupSettingsDialog(InputGesturesDialogWithSearch, search=self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1))
+		return isUnsigned
+
+	def _enterActivatesOk_ctrlSActivatesApply(self, event: wx.PyEvent) -> None:
+		"""Overridden method that performed when pressing keys.
+		@param event: event binder object that handles keystrokes
+		@type event: wx.PyEvent
+		"""
+		if event.KeyCode in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
+			if self.unsignedGestureWarning():
+				return
+			self.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, wx.ID_OK))
+		event.Skip()
+
+	def onOk(self, event: wx.PyEvent) -> None:
+		"""Overridden method that is executed when the Ok button is activated.
+		@param event: event binder object that handles the activation of the OK button
+		@type event: wx.PyEvent
+		"""
+		event.Skip()
+		self.Destroy()
+		if self.unsignedGestureWarning():
+			return
+		gui.mainFrame._popupSettingsDialog(InputGesturesDialogWithSearch, search=self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1))
 
 	def postInit(self) -> None:
 		"""Called after the dialog has been created."""

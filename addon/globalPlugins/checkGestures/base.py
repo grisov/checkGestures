@@ -1,4 +1,4 @@
-	#base.py
+#base.py
 # Components required to work with input gestures collection
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
