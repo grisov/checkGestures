@@ -28,6 +28,8 @@ Such features do not appear in the standard NVDA "Input Gestures..." dialog, so 
 ## Help
 One way to view this help page is to call up the NVDA menu, go to the "Tools" submenu, then - "Check Input Gestures", and activate "Help".
 
+Note: All features of the add-on are presented in the NVDA "Input Gestures" dialog and you can assign your own keyboard shortcuts to each of them.
+
 ## Change log
 
 ### Version 1.0
