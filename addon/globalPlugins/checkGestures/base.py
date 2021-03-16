@@ -1,4 +1,4 @@
-#base.py
+# base.py
 # Components required to work with input gestures collection
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
@@ -11,13 +11,14 @@ from typing import Optional, List, Iterator
 class Gesture(object):
 	"""Representation of one input gesture."""
 
-	def __init__(self,
-		gesture: str,
-		category: Optional[str]=None,
-		displayName: Optional[str]=None,
-		className: Optional[str]=None,
-		moduleName: Optional[str]=None,
-		scriptName: Optional[str]=None) -> None:
+	def __init__(
+			self,
+			gesture: str,
+			category: Optional[str] = None,
+			displayName: Optional[str] = None,
+			className: Optional[str] = None,
+			moduleName: Optional[str] = None,
+			scriptName: Optional[str] = None) -> None:
 		"""Initialization of the main fields of the gesture description.
 		@param gesture: text representation of the input gesture
 		@type gesture: str
@@ -96,17 +97,15 @@ class Gesture(object):
 		"""
 		if not isinstance(other, Gesture):
 			return False
-		return self.gesture==other.gesture and \
-			self.displayName==other.displayName and \
-			self.moduleName==other.moduleName and \
-			self.scriptName==other.scriptName
+		return self.gesture == other.gesture and self.displayName == other.displayName and \
+		       self.moduleName == other.moduleName and self.scriptName == other.scriptName
 
 	def __repr__(self) -> str:
 		"""Text presentation of input gesture object.
 		@return: text presentation
 		@rtype: str
 		"""
-		return "%s - %s / %s" % (self.gesture, self.category or self.moduleName, self.displayName or self.scriptName)
+		return "%s - %s/%s" % (self.gesture, self.category or self.moduleName, self.displayName or self.scriptName)
 
 
 class Gestures(object):
@@ -148,7 +147,7 @@ class Gestures(object):
 		@rtype: bool
 		"""
 		for gesture in self._all:
-			if obj==gesture:
+			if obj == gesture:
 				return True
 		return False
 
@@ -181,12 +180,12 @@ class Gestures(object):
 				obj = mapping[category][script]
 				for gest in obj.gestures:
 					gesture = Gesture(
-						gesture = gest,
-						category = obj.category,
-						displayName = obj.displayName,
-						className = obj.className,
-						moduleName = obj.moduleName,
-						scriptName = obj.scriptName
+						gesture=gest,
+						category=obj.category,
+						displayName=obj.displayName,
+						className=obj.className,
+						moduleName=obj.moduleName,
+						scriptName=obj.scriptName
 					)
 					self.append(gesture)
 
@@ -196,13 +195,13 @@ class Gestures(object):
 		"""
 		import globalPluginHandler
 		for plugin in globalPluginHandler.runningPlugins:
-			for gest,obj in plugin._gestureMap.items():
+			for gest, obj in plugin._gestureMap.items():
 				if obj and not obj.__doc__:
 					gesture = Gesture(
-						gesture = gest,
-						displayName = obj.__doc__,
-						moduleName = obj.__module__,
-						scriptName = obj.__name__.replace("script_", '')
+						gesture=gest,
+						displayName=obj.__doc__,
+						moduleName=obj.__module__,
+						scriptName=obj.__name__.replace("script_", '')
 					)
 					self.append(gesture)
 
@@ -254,9 +253,9 @@ class Duplicates(FilteredGestures):
 		import config
 		gestures = Gestures()
 		gestures.initialize()
-		collection = [item.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '') for item in gestures]
+		collection = [gt.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '') for gt in gestures]
 		for gest in gestures:
-			if collection.count(gest.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], ''))>1:
+			if collection.count(gest.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '')) > 1:
 				yield gest
 
 
@@ -268,9 +267,7 @@ class Unsigned(FilteredGestures):
 		@return: iterator of the unsigned input gestures
 		@rtype: Iterator[Gesture]
 		"""
-		import config
 		gestures = Gestures()
 		gestures.unsigned()
-		collection = [item.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '') for item in gestures]
 		for gest in gestures:
 			yield gest

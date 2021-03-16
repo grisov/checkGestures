@@ -1,34 +1,35 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
-from typing import Callable
+import os.path
 import addonHandler
+import globalPluginHandler
+from globalVars import appArgs
+import gui
+import wx
+import config
+from typing import Callable
 from logHandler import log
+from scriptHandler import script
+from inputCore import InputGesture
+from . import base
+from .graphui import GesturesListDialog
+
 try:
 	addonHandler.initTranslation()
 except addonHandler.AddonError:
-	log.warning("Unable to initialise translations. This may be because the addon is running from NVDA scratchpad.")
+	log.warning("Unable to init translations. This may be because the addon is running from NVDA scratchpad.")
 _: Callable[[str], str]
 
-import os
 addonDir = os.path.join(os.path.dirname(__file__), "..", "..")
 if isinstance(addonDir, bytes):
 	addonDir = addonDir.decode("mbcs")
 curAddon = addonHandler.Addon(addonDir)
 addonName: str = curAddon.manifest['name']
 addonSummary: str = curAddon.manifest['summary']
-
-import globalPluginHandler
-from globalVars import appArgs
-import gui, wx
-import config
-from scriptHandler import script
-from inputCore import InputGesture
-from . import base
-from .graphui import GesturesListDialog
 
 
 class Duplicates(base.Duplicates):
@@ -79,11 +80,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@param gestures: filtered collection of input gestures
 		@type gestures: base.FilteredGestures
 		"""
-		if len(gestures)>0:
+		if len(gestures) > 0:
 			gui.mainFrame._popupSettingsDialog(GesturesListDialog, title=gestures.title, gestures=gestures)
 		else:
-			# Translators: Notification of no search results
-			gui.messageBox(_("Target gestures not found"),
+			gui.messageBox(
+				# Translators: Notification of no search results
+				_("Target gestures not found"),
 				caption=gestures.title,
 				parent=gui.mainFrame)
 

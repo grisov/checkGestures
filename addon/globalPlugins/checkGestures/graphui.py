@@ -1,18 +1,9 @@
-#graphui.py
+# graphui.py
 # Graphical interface components
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
-
-from typing import Callable
-import addonHandler
-from logHandler import log
-try:
-	addonHandler.initTranslation()
-except addonHandler.AddonError:
-	log.warning("Unable to initialise translations. This may be because the addon is running from NVDA scratchpad.")
-_: Callable[[str], str]
 
 import wx
 import gui
@@ -20,13 +11,22 @@ from gui.settingsDialogs import SettingsDialog
 from gui.nvdaControls import AutoWidthColumnListCtrl
 from gui.inputGestures import InputGesturesDialog
 from inputCore import getDisplayTextForGestureIdentifier
+from typing import Callable
+import addonHandler
+from logHandler import log
 from .base import FilteredGestures
+
+try:
+	addonHandler.initTranslation()
+except addonHandler.AddonError:
+	log.warning("Unable to init translations. This may be because the addon is running from NVDA scratchpad.")
+_: Callable[[str], str]
 
 
 class InputGesturesDialogWithSearch(InputGesturesDialog):
 	"""Overridden standard NVDA Input Gestures dialog with search at initialization."""
 
-	def __init__(self, parent: wx.Window, search: str='', *args, **kwargs) -> None:
+	def __init__(self, parent: wx.Window, search: str = '', *args, **kwargs) -> None:
 		"""Initialization of the Input Gestures dialog with a search query.
 		@param parent: The parent for this dialog.
 		@type parent: wx.Window
@@ -43,11 +43,12 @@ class GesturesListDialog(SettingsDialog):
 	@type title: str
 	"""
 
-	def __init__(self,
-		parent: wx.Window,
-		title: str,
-		gestures: FilteredGestures,
-		*args, **kwargs) -> None:
+	def __init__(
+			self,
+			parent: wx.Window,
+			title: str,
+			gestures: FilteredGestures,
+			*args, **kwargs) -> None:
 		"""Initialization of the graphical dialog.
 		@param parent: The parent window for this dialog
 		@type parent: wx.Window
@@ -70,7 +71,7 @@ class GesturesListDialog(SettingsDialog):
 			# Translators: Label above the list of found gestures
 			_("Select a gesture from the list"),
 			AutoWidthColumnListCtrl,
-			autoSizeColumn=1, # The replacement column is likely to need the most space
+			autoSizeColumn=1,  # The replacement column is likely to need the most space
 			itemTextCallable=None,
 			style=wx.LC_REPORT | wx.LC_SINGLE_SEL
 		)
@@ -85,9 +86,13 @@ class GesturesListDialog(SettingsDialog):
 		self.Center(wx.BOTH | wx.Center)
 
 		# Fill in the list of available input gestures
-		gestureDisplayText = lambda gest: "{1} ({0})".format(*getDisplayTextForGestureIdentifier(gest))
+		gestureDisplayText = lambda gest: "{1} ({0})".format(*getDisplayTextForGestureIdentifier(gest))  # noqa E731 do not assign a lambda expression, use a def
 		for gesture in sorted(self.gestures, key=lambda x: x.gesture):
-			self.gesturesList.Append((gestureDisplayText(gesture.gesture), gesture.displayName or gesture.scriptName, gesture.category or f"[{gesture.moduleName}]"))
+			self.gesturesList.Append((
+				gestureDisplayText(gesture.gesture),
+				gesture.displayName or gesture.scriptName,
+				gesture.category or f"[{gesture.moduleName}]"
+			))
 		self.gesturesList.SetFocus()
 		self.gesturesList.Focus(0)
 		self.gesturesList.Select(0)
@@ -100,8 +105,9 @@ class GesturesListDialog(SettingsDialog):
 		category: str = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
 		isUnsigned: bool = category.startswith('[') and category.endswith(']')
 		if isUnsigned:
-			# Translators: The message that reports about the absence of the selected gesture in the NVDA Input Gestures dialog
-			gui.messageBox(_("This gesture is not represented in the NVDA Input Gestures dialog."),
+			gui.messageBox(
+				# Translators: Message that reports about the absence of the selected gesture in the Input Gestures dialog
+				_("This gesture is not represented in the NVDA Input Gestures dialog."),
 				# Translators: The title of the window that reports the lack of description of the selected gesture
 				caption=_("Gesture without description"),
 				parent=self)
@@ -127,7 +133,9 @@ class GesturesListDialog(SettingsDialog):
 		self.Destroy()
 		if self.unsignedGestureWarning():
 			return
-		gui.mainFrame._popupSettingsDialog(InputGesturesDialogWithSearch, search=self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1))
+		gui.mainFrame._popupSettingsDialog(
+			InputGesturesDialogWithSearch,
+			search=self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1))
 
 	def postInit(self) -> None:
 		"""Called after the dialog has been created."""
