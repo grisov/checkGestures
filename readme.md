@@ -30,6 +30,12 @@ One way to view this help page is to call up the NVDA menu, go to the "Tools" su
 
 Note: All features of the add-on are presented in the NVDA "Input Gestures" dialog and you can assign your own keyboard shortcuts to each of them.
 
+## Contributions
+We are very grateful to everyone who made the effort to develop, translate and maintain this add-on:
+
+* Wafiqtaher - Arabic translation;
+* Angelo Miguel Abrantes - Portuguese translation.
+
 ## Change log
 
 ### Version 1.0
