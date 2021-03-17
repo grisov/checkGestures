@@ -48,5 +48,5 @@
 1. افتح سطر الأوامر ، قم بالتغيير إلى جذر هذا الريبو
 2. قم بتشغيل الأمر ** scons **. يتم وضع الوظيفة الإضافية التي تم إنشاؤها ، في حالة عدم وجود أخطاء ، في الدليل الحالي.
 
-[1]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures.nvda-addon
-[2]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures.nvda-addon
+[1]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures-1.0.nvda-addon
+[2]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures-1.0.1-dev.nvda-addon

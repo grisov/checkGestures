@@ -50,5 +50,5 @@
 1. Откройте командную строку, перейдите в корневой каталог этого репозитория.
 2. Запустите команду **scons**. Созданное дополнение при отсутствии ошибок будет помещено в текущий каталог.
 
-[1]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures.nvda-addon
-[2]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures.nvda-addon
+[1]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures-1.0.nvda-addon
+[2]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures-1.0.1-dev.nvda-addon
