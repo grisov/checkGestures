@@ -34,7 +34,8 @@ Note: All features of the add-on are presented in the NVDA "Input Gestures" dial
 We are very grateful to everyone who made the effort to develop, translate and maintain this add-on:
 
 * Wafiqtaher - Arabic translation;
-* Angelo Miguel Abrantes - Portuguese translation.
+* Angelo Miguel Abrantes - Portuguese translation;
+* Cagri Dogan - Turkish translation.
 
 ## Change log
 
