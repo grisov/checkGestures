@@ -3,7 +3,6 @@
 # See the file COPYING for more details.
 # Copyright (C) 2021 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
-import os.path
 import addonHandler
 import globalPluginHandler
 from globalVars import appArgs
@@ -23,12 +22,9 @@ except addonHandler.AddonError:
 	log.warning("Unable to init translations. This may be because the addon is running from NVDA scratchpad.")
 _: Callable[[str], str]
 
-addonDir = os.path.join(os.path.dirname(__file__), "..", "..")
-if isinstance(addonDir, bytes):
-	addonDir = addonDir.decode("mbcs")
-curAddon = addonHandler.Addon(addonDir)
-addonName: str = curAddon.manifest['name']
-addonSummary: str = curAddon.manifest['summary']
+curAddon = addonHandler.getCodeAddon()
+ADDON_NAME: str = curAddon.manifest['name']
+ADDON_SUMMARY: str = curAddon.manifest['summary']
 
 
 class Duplicates(base.Duplicates):
@@ -43,7 +39,7 @@ class Unsigned(base.Unsigned):
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	"""Implementation global commands of NVDA add-on"""
-	scriptCategory: str = addonSummary
+	scriptCategory: str = ADDON_SUMMARY
 
 	def __init__(self, *args, **kwargs) -> None:
 		"""Initialization of the add-on global plugin."""
@@ -56,7 +52,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"""Build a submenu in the NVDA "tools" menu."""
 		self.menu: wx.Menu = gui.mainFrame.sysTrayIcon.toolsMenu
 		subMenu = wx.Menu()
-		self.mainItem: wx.MenuItem = self.menu.AppendSubMenu(subMenu, addonSummary)
+		self.mainItem: wx.MenuItem = self.menu.AppendSubMenu(subMenu, ADDON_SUMMARY)
 		checkDuplicatesItem: wx.MenuItem = subMenu.Append(wx.ID_ANY, Duplicates().menuItem)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckDuplicates, checkDuplicatesItem)
 		checkUnsignedItem: wx.MenuItem = subMenu.Append(wx.ID_ANY, Unsigned().menuItem)
