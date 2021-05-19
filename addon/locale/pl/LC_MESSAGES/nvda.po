@@ -1,0 +1,69 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 'checkGestures' '1.0.1-dev'\n"
+"Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
+"POT-Creation-Date: 2021-05-19 13:11+0200\n"
+"PO-Revision-Date: 2021-05-19 13:25+0200\n"
+"Last-Translator: Stefan Banita\n"
+"Language-Team: Stefan Banita\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
+"|| n%100>14) ? 1 : 2);\n"
+
+#. Translators: The title of the gestures list dialog and menu item
+msgid "Search for &duplicate gestures"
+msgstr "Wyszukaj &zduplikowane zdarzenia wejścia"
+
+#. Translators: The title of the gestures list dialog and menu item
+msgid "Gestures &without description"
+msgstr "Zdarzenia wejścia &bez opisu"
+
+#. Translators: the name of a submenu item
+msgid "&Help"
+msgstr "&Pomoc"
+
+#. Translators: Notification of no search results
+msgid "Target gestures not found"
+msgstr "Nie znaleziono docelowych zdarzeń wejścia"
+
+#. Translators: Label above the list of found gestures
+msgid "Select a gesture from the list"
+msgstr "Wybierz zdarzenie wejścia z listy"
+
+#. Translators: The label for a first column in the list of gestures
+msgid "Gesture"
+msgstr "Zdarzenie wejścia"
+
+#. Translators: The label for the second column in the list of gestures
+msgid "Script description or function name"
+msgstr "Opis skryptu lub nazwa funkcji"
+
+#. Translators: The label for the third column in the list of gestures
+msgid "Category"
+msgstr "Kategoria"
+
+#. Translators: Message that reports about the absence of the selected gesture in the Input Gestures dialog
+msgid "This gesture is not represented in the NVDA Input Gestures dialog."
+msgstr ""
+"To zdarzenie wejścia nie jest reprezentowane w oknie dialogowym wprowadzania "
+"zdarzeń wejścia NVDA."
+
+#. Translators: The title of the window that reports the lack of description of the selected gesture
+msgid "Gesture without description"
+msgstr "Zdarzenie wejścia bez opisu"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+msgid "Check Input Gestures"
+msgstr "Check Input Gestures (Sprawdź zdarzenia wejścia)"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+msgid "Find and fix input gestures conflicts in NVDA and add-ons."
+msgstr "Znajdź i napraw konflikty zdarzeń wejścia w NVDA i dodatkach."
