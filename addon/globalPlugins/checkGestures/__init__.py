@@ -14,7 +14,7 @@ from logHandler import log
 from scriptHandler import script
 from inputCore import InputGesture
 from . import base
-from .graphui import GesturesListDialog
+from .graphui import UnsignedGesturesDialog
 
 try:
 	addonHandler.initTranslation()
@@ -76,12 +76,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@type gestures: base.FilteredGestures
 		"""
 		if len(gestures) > 0:
-			gui.mainFrame._popupSettingsDialog(GesturesListDialog, title=gestures.title, gestures=gestures)
+			GesturesDialog = UnsignedGesturesDialog if isinstance(gestures, Duplicates) else UnsignedGesturesDialog
+			gui.mainFrame._popupSettingsDialog(GesturesDialog, title=gestures.title, gestures=gestures)
 		else:
 			gui.messageBox(
 				# Translators: Notification of no search results
-				_("Target gestures not found"),
+				message=_("Target gestures not found"),
 				caption=gestures.title,
+				style=wx.OK | wx.ICON_ERROR,
 				parent=gui.mainFrame)
 
 	def onCheckDuplicates(self, event: wx.PyEvent) -> None:
