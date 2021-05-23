@@ -14,7 +14,7 @@ from logHandler import log
 from scriptHandler import script
 from inputCore import InputGesture
 from . import base
-from .graphui import UnsignedGesturesDialog
+from .graphui import DuplicatedGesturesDialog, UnsignedGesturesDialog
 
 try:
 	addonHandler.initTranslation()
@@ -76,7 +76,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@type gestures: base.FilteredGestures
 		"""
 		if len(gestures) > 0:
-			GesturesDialog = UnsignedGesturesDialog if isinstance(gestures, Duplicates) else UnsignedGesturesDialog
+			GesturesDialog = DuplicatedGesturesDialog if isinstance(gestures, Duplicates) else UnsignedGesturesDialog
 			gui.mainFrame._popupSettingsDialog(GesturesDialog, title=gestures.title, gestures=gestures)
 		else:
 			gui.messageBox(

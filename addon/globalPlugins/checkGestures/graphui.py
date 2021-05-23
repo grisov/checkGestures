@@ -177,3 +177,74 @@ class UnsignedGesturesDialog(BaseGesturesDialog):
 		@rtype: str
 		"""
 		return self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1)
+
+
+class DuplicatedGesturesDialog(BaseGesturesDialog):
+	"""Dialog window to display a collection of duplicated input gestures."""
+
+	def makeSettings(self, sizer: wx.Sizer) -> None:
+		"""Populate the dialog with WX controls.
+		@param sizer: The sizer to which to add the WX controls.
+		@type sizer: wx.Sizer
+		"""
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=sizer)
+		sHelper.addItem(
+			wx.StaticText(
+				self,
+				# Translators: Label above the tree of found duplicated gestures
+				label=_("Select a gesture from the list"),
+				style=wx.ALIGN_LEFT
+			)
+		)
+		self.gesturesList = sHelper.addItem(
+			wx.TreeCtrl(
+				self,
+				size=wx.Size(600, 400),
+				style=wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_LINES_AT_ROOT | wx.TR_SINGLE
+			)
+		)
+		# ***
+		self.gesturesList = sHelper.addLabeledControl(
+			# Translators: 
+			_("Select a gesture from the list"),
+			AutoWidthColumnListCtrl,
+			autoSizeColumn=1,  # The replacement column is likely to need the most space
+			itemTextCallable=None,
+			style=wx.LC_REPORT | wx.LC_SINGLE_SEL
+		)
+		# Translators: The label for a first column in the list of gestures
+		self.gesturesList.InsertColumn(0, _("Gesture"), width=150)
+		# Translators: The label for the second column in the list of gestures
+		self.gesturesList.InsertColumn(1, _("Script description or function name"))
+		# Translators: The label for the third column in the list of gestures
+		self.gesturesList.InsertColumn(2, _("Category"), width=150)
+
+		sizer.Fit(self)
+		self.Center(wx.BOTH | wx.Center)
+
+		# Fill in the list of available input gestures
+		gestureDisplayText = lambda gest: "{1} ({0})".format(*getDisplayTextForGestureIdentifier(gest))  # noqa E731 do not assign a lambda expression, use a def
+		for gesture in sorted(self.gestures, key=lambda x: x.gesture):
+			self.gesturesList.Append((
+				gestureDisplayText(gesture.gesture),
+				gesture.displayName or gesture.scriptName,
+				gesture.category or f"[{gesture.moduleName}]"
+			))
+		self.gesturesList.SetFocus()
+		self.gesturesList.Focus(0)
+		self.gesturesList.Select(0)
+
+	def isUnsignedInFocus(self) -> bool:
+		"""Check that the selected gesture is not presented in the Input Gestures dialog.
+		@return: an indication of whether the selected gesture is not presented in the Input gestures dialog
+		@rtype: bool
+		"""
+		category: str = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
+		return category.startswith('[') and category.endswith(']')
+
+	def scriptNameInFocus(self) -> str:
+		"""Extract script name from the item in focus.
+		@return: the name of the script that binded to gesture
+		@rtype: str
+		"""
+		return self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1)
