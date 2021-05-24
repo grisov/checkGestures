@@ -4,7 +4,6 @@
 * Version: 1.0
 * NVDA compatibility: 2019.3 and beyond
 * Download [stable version][1]
-* Download [development version][2]
 
 Find and fix input gestures conflicts in NVDA and add-ons. The general term "input gestures" includes keyboard commands, commands entered from Braille keyboards and gestures of touch screens.  
 Each of the installed add-ons can make changes to the NVDA configuration by adding or reassigning existing input gestures. If the same input gestures are binded to several functions, it will be impossible to call some of them.  
@@ -57,5 +56,4 @@ These can be installed with pip:
 1. Open a command line, change to the root of this repo
 2. Run the **scons** command. The created add-on, if there were no errors, is placed in the current directory.
 
-[1]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures-1.0.nvda-addon
-[2]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures-1.0.1-dev.nvda-addon
+[1]: https://github.com/grisov/checkGestures/releases/download/latest/checkGestures-1.0.2.nvda-addon
