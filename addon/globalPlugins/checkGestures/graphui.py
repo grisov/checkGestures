@@ -50,7 +50,7 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 			title: str,
 			gestures: FilteredGestures,
 			*args, **kwargs
-		) -> None:
+	) -> None:
 		"""Initialization of the graphical dialog.
 		@param parent: The parent window for this dialog
 		@type parent: wx.Window
@@ -205,7 +205,7 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 		)
 		# ***
 		self.gesturesList = sHelper.addLabeledControl(
-			# Translators: 
+			# Translators: Label in the window displaying duplicate gestures
 			_("Select a gesture from the list"),
 			AutoWidthColumnListCtrl,
 			autoSizeColumn=1,  # The replacement column is likely to need the most space
