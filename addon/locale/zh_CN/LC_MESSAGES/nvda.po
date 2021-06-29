@@ -1,0 +1,71 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: checkGestures\n"
+"Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
+"POT-Creation-Date: 2021-02-13 21:58+0200\n"
+"PO-Revision-Date: 2021-06-30 00:54+0800\n"
+"Language-Team: Cary-rowen <manchen_0528@outlook.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.4.3\n"
+"Last-Translator: 完美很难 <1872265132@qq.com>\n"
+"Language: zh_CN\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#. Translators: The title of the gestures list dialog and menu item
+msgid "Search for &duplicate gestures"
+msgstr "重复按键或手势搜索"
+
+#. Translators: The title of the gestures list dialog and menu item
+msgid "Gestures &without description"
+msgstr "无说明的按键或手势"
+
+#. Translators: the name of a submenu item
+msgid "&Help"
+msgstr "帮助(&H)"
+
+#. Translators: Notification of no search results
+msgid "Target gestures not found"
+msgstr "找不到目标按键或手势"
+
+#. Translators: Label above the list of found gestures
+msgid "Select a gesture from the list"
+msgstr "从列表中选择一个按键或手势"
+
+#. Translators: The label for a first column in the list of gestures
+msgid "Gesture"
+msgstr "按键或手势"
+
+#. Translators: The label for the second column in the list of gestures
+msgid "Script description or function name"
+msgstr "命令描述或函数名称"
+
+#. Translators: The label for the third column in the list of gestures
+msgid "Category"
+msgstr "类别"
+
+#. Translators: The message that reports about the absence of the selected gesture in the NVDA Input Gestures dialog
+msgid "This gesture is not represented in the NVDA Input Gestures dialog."
+msgstr "此按键或手势未在“NVDA 按键与手势”对话框中显示。"
+
+#. Translators: The title of the window that reports the lack of description of the selected gesture
+msgid "Gesture without description"
+msgstr "无说明的按键或手势"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+msgid "Check Input Gestures"
+msgstr "按键或手势检查"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+msgid "Find and fix input gestures conflicts in NVDA and add-ons."
+msgstr "查找并修复 NVDA 及插件中的按键与手势冲突。"
