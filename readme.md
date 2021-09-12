@@ -38,7 +38,8 @@ We are very grateful to everyone who made the effort to develop, translate and m
 
 * Wafiqtaher - Arabic translation;
 * Angelo Miguel Abrantes - Portuguese translation;
-* Cagri Dogan - Turkish translation.
+* Cagri Dogan - Turkish translation;
+* Cary Rowen - simplified Chinese translation.
 
 ## Change log
 
