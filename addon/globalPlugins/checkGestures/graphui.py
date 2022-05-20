@@ -45,11 +45,11 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 	"""
 
 	def __init__(
-			self,
-			parent: wx.Window,
-			title: str,
-			gestures: FilteredGestures,
-			*args, **kwargs
+		self,
+		parent: wx.Window,
+		title: str,
+		gestures: FilteredGestures,
+		*args, **kwargs
 	) -> None:
 		"""Initialization of the graphical dialog.
 		@param parent: The parent window for this dialog

@@ -12,13 +12,14 @@ class Gesture(object):
 	"""Representation of one input gesture."""
 
 	def __init__(
-			self,
-			gesture: str,
-			category: Optional[str] = None,
-			displayName: Optional[str] = None,
-			className: Optional[str] = None,
-			moduleName: Optional[str] = None,
-			scriptName: Optional[str] = None) -> None:
+		self,
+		gesture: str,
+		category: Optional[str] = None,
+		displayName: Optional[str] = None,
+		className: Optional[str] = None,
+		moduleName: Optional[str] = None,
+		scriptName: Optional[str] = None
+	) -> None:
 		"""Initialization of the main fields of the gesture description.
 		@param gesture: text representation of the input gesture
 		@type gesture: str
@@ -98,7 +99,7 @@ class Gesture(object):
 		if not isinstance(other, Gesture):
 			return False
 		return self.gesture == other.gesture and self.displayName == other.displayName and \
-		       self.moduleName == other.moduleName and self.scriptName == other.scriptName
+			self.moduleName == other.moduleName and self.scriptName == other.scriptName
 
 	def __repr__(self) -> str:
 		"""Text presentation of input gesture object.
