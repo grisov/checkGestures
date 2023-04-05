@@ -2,7 +2,7 @@
 
 * Author: Oleksandr Gryshchenko
 * Version: 1.0
-* NVDA compatibility: 2020.1 and beyond
+* NVDA compatibility: 2020.3 and beyond
 * Download [stable version][1]
 
 Find and fix input gestures conflicts in NVDA and add-ons. The general term "input gestures" includes keyboard commands, commands entered from Braille keyboards and gestures of touch screens.
