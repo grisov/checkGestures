@@ -43,6 +43,9 @@ We are very grateful to everyone who made the effort to develop, translate and m
 
 ## Change log
 
+### Version 1.0.4
+* the add-on has been tested for compatibility with NVDA 2023.1.
+
 ### Version 1.0.3
 * the add-on has been tested for compatibility with NVDA 2022.1;
 * implemented search for duplicate input gestures;
