@@ -1,0 +1,90 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 'checkGestures' '1.0.4'\n"
+"Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
+"POT-Creation-Date: 2023-05-02 17:54+0300\n"
+"PO-Revision-Date: 2023-05-02 18:53+0200\n"
+"Last-Translator: Jani Kinnunen <janikinnunen340@gmail.com>\n"
+"Language-Team: fi_FI <janikinnunen340@gmail.com>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.11\n"
+
+#. Translators: The title of the gestures list dialog and menu item
+#: addon\globalPlugins\checkGestures\__init__.py:32
+msgid "Search for &duplicate gestures"
+msgstr "Etsi &päällekkäiset näppäinkomennot"
+
+#. Translators: The title of the gestures list dialog and menu item
+#: addon\globalPlugins\checkGestures\__init__.py:37
+msgid "Gestures &without description"
+msgstr "Näppäinkomennot &ilman kuvausta"
+
+#. Translators: the name of a submenu item
+#: addon\globalPlugins\checkGestures\__init__.py:61
+msgid "&Help"
+msgstr "&Ohje"
+
+#. Translators: Notification of no search results
+#: addon\globalPlugins\checkGestures\__init__.py:84
+msgid "Target gestures not found"
+msgstr "Kohdenäppäinkomentoja ei löydy"
+
+#. Translators: Message that reports about the absence of the selected gesture in the Input Gestures dialog
+#: addon\globalPlugins\checkGestures\graphui.py:91
+msgid "This gesture is not represented in the NVDA Input Gestures dialog."
+msgstr ""
+"Tätä näppäinkomentoa ei näytetä NVDA:n Näppäinkomennot-valintaikkunassa."
+
+#. Translators: The title of the window that reports the lack of description of the selected gesture
+#: addon\globalPlugins\checkGestures\graphui.py:93
+msgid "Gesture without description"
+msgstr "Näppäinkomento ilman kuvausta"
+
+#. Translators: Label above the list of found gestures
+#. Translators: Label above the tree of found duplicated gestures
+#. Translators: Label in the window displaying duplicate gestures
+#: addon\globalPlugins\checkGestures\graphui.py:138
+#: addon\globalPlugins\checkGestures\graphui.py:195
+#: addon\globalPlugins\checkGestures\graphui.py:209
+msgid "Select a gesture from the list"
+msgstr "Valitse näppäinkomento luettelosta"
+
+#. Translators: The label for a first column in the list of gestures
+#: addon\globalPlugins\checkGestures\graphui.py:145
+#: addon\globalPlugins\checkGestures\graphui.py:216
+msgid "Gesture"
+msgstr "Näppäinkomento"
+
+#. Translators: The label for the second column in the list of gestures
+#: addon\globalPlugins\checkGestures\graphui.py:147
+#: addon\globalPlugins\checkGestures\graphui.py:218
+msgid "Script description or function name"
+msgstr "Skriptin kuvaus tai funktionimi"
+
+#. Translators: The label for the third column in the list of gestures
+#: addon\globalPlugins\checkGestures\graphui.py:149
+#: addon\globalPlugins\checkGestures\graphui.py:220
+msgid "Category"
+msgstr "Kategoria"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on
+#. to be shown on installation and add-on information found in Add-ons Manager.
+#: buildVars.py:24
+msgid "Check Input Gestures"
+msgstr "Tarkista näppäinkomennot"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+#: buildVars.py:27
+msgid "Find and fix input gestures conflicts in NVDA and add-ons."
+msgstr "Etsi ja korjaa NVDA:n ja lisäosien näppäinkomentojen ristiriidat."
