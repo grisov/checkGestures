@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 'checkGestures' '1.0.4'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
 "POT-Creation-Date: 2023-05-02 17:54+0300\n"
-"PO-Revision-Date: 2023-05-02 18:53+0200\n"
+"PO-Revision-Date: 2023-07-13 16:27+0200\n"
 "Last-Translator: Jani Kinnunen <janikinnunen340@gmail.com>\n"
 "Language-Team: fi_FI <janikinnunen340@gmail.com>\n"
 "Language: fi\n"
@@ -26,7 +26,7 @@ msgstr "Etsi &päällekkäiset näppäinkomennot"
 #. Translators: The title of the gestures list dialog and menu item
 #: addon\globalPlugins\checkGestures\__init__.py:37
 msgid "Gestures &without description"
-msgstr "Näppäinkomennot &ilman kuvausta"
+msgstr "Kuvauksettomat näppä&inkomennot"
 
 #. Translators: the name of a submenu item
 #: addon\globalPlugins\checkGestures\__init__.py:61
@@ -41,13 +41,12 @@ msgstr "Kohdenäppäinkomentoja ei löydy"
 #. Translators: Message that reports about the absence of the selected gesture in the Input Gestures dialog
 #: addon\globalPlugins\checkGestures\graphui.py:91
 msgid "This gesture is not represented in the NVDA Input Gestures dialog."
-msgstr ""
-"Tätä näppäinkomentoa ei näytetä NVDA:n Näppäinkomennot-valintaikkunassa."
+msgstr "Tämä näppäinkomento ei näy NVDA:n Näppäinkomennot-valintaikkunassa."
 
 #. Translators: The title of the window that reports the lack of description of the selected gesture
 #: addon\globalPlugins\checkGestures\graphui.py:93
 msgid "Gesture without description"
-msgstr "Näppäinkomento ilman kuvausta"
+msgstr "Kuvaukseton näppäinkomento"
 
 #. Translators: Label above the list of found gestures
 #. Translators: Label above the tree of found duplicated gestures
@@ -68,7 +67,7 @@ msgstr "Näppäinkomento"
 #: addon\globalPlugins\checkGestures\graphui.py:147
 #: addon\globalPlugins\checkGestures\graphui.py:218
 msgid "Script description or function name"
-msgstr "Skriptin kuvaus tai funktionimi"
+msgstr "Skriptin kuvaus tai funktion nimi"
 
 #. Translators: The label for the third column in the list of gestures
 #: addon\globalPlugins\checkGestures\graphui.py:149
