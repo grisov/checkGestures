@@ -36,6 +36,7 @@ Note: All features of the add-on are presented in the NVDA "Input Gestures" dial
 ## Contributions
 We are very grateful to everyone who made the effort to develop, translate and maintain this add-on:
 
+* Jani Kinnunen - Finnish translation;
 * Wafiqtaher - Arabic translation;
 * Angelo Miguel Abrantes - Portuguese translation;
 * Cagri Dogan - Turkish translation;
@@ -43,8 +44,9 @@ We are very grateful to everyone who made the effort to develop, translate and m
 
 ## Change log
 
-### Version 1.0.4
-* the add-on has been tested for compatibility with NVDA 2023.1.
+### Version 1.0.5
+* the add-on has been tested for compatibility with NVDA 2023.1;
+* changed the short name of the add-on in the store and updated the download link in ReadMe.
 
 ### Version 1.0.3
 * the add-on has been tested for compatibility with NVDA 2022.1;
@@ -65,4 +67,4 @@ These can be installed with pip:
 1. Open a command line, change to the root of this repo
 2. Run the **scons** command. The created add-on, if there were no errors, is placed in the current directory.
 
-[1]: https://addons.nvda-project.org/files/get.php?file=cig
+[1]: https://addons.nvda-project.org/files/get.php?file=checkGestures
