@@ -23,8 +23,8 @@ Kun olet painanut Enter-näppäintä valitun luettelokohteen kohdalla, vastaava 
 
 Huom: Toiminnot, joilla ei ole kuvausta, eivät näy Näppäinkomennot-valintaikkunassa. Siksi tällaisen kohteen valitsemisen jälkeen näytetään asiasta kertova varoitus.
 
-## Näppäinkomennot ilman kuvausta
-Jos haluat tarkastella toimintoihin määritettyjen, ilman kuvausta olevien näppäinkomentojen luetteloa (mikäli sellaisia on), avaa NVDA-valikko, siirry Työkalut-alivalikkoon ja valitse sitten "Näppäinkomennot ilman kuvausta...".
+## Kuvauksettomat näppäinkomennot
+Jos haluat tarkastella toimintoihin määritettyjen, ilman kuvausta olevien näppäinkomentojen luetteloa (mikäli sellaisia on), avaa NVDA-valikko, siirry Työkalut-alivalikkoon ja valitse sitten "Kuvauksettomat näppäinkomennot...".
 
 Tällaiset toiminnot eivät näy NVDA:n tavallisessa Näppäinkomennot-valintaikkunassa, joten niihin liitettyjä näppäinkomentoja ei ole vielä mahdollista poistaa tai uudelleenmäärittää.
 
@@ -48,8 +48,8 @@ Olemme erittäin kiitollisia kaikille, jotka ovat nähneet vaivaa tämän lisäo
 
 ### Versio 1.0.3
 * Lisäosan yhteensopivuus NVDA 2022.1:n kanssa on testattu
-* Toteutettu päällekkäisten näppäinkomentojen etsintä
-* Toteutettu ilman kuvausta oleviin toimintoihin liitettyjen näppäinkomentojen etsintä
+* Toteutettu päällekkäisten näppäinkomentojen etsiminen
+* Toteutettu kuvauksettomiin toimintoihin liitettyjen näppäinkomentojen etsiminen
 
 ## Lisäosan lähdekoodin muuttaminen
 Voit kloonata tämän koodivaraston tehdäksesi muutoksia Tarkista näppäinkomennot -lisäosaan.
