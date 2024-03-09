@@ -26,21 +26,27 @@ addon_info = {
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description": _("""Find and fix input gestures conflicts in NVDA and add-ons."""),
 	# version
-	"addon_version": "1.0.5",
+	"addon_version": "1.0.6",
 	# Author(s)
-	"addon_author": "Oleksandr Gryshchenko <grisov.nvaccess@mailnull.com>",
+	"addon_author": "Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>",
 	# URL for the add-on documentation support
 	"addon_url": "https://github.com/grisov/checkGestures",
+	# URL for the add-on repository where the source code can be found
+	"addon_sourceURL": "https://github.com/grisov/checkGestures",
 	# Documentation file name
 	"addon_docFileName": "readme.html",
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
 	"addon_minimumNVDAVersion": "2020.3.0",
 	# Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion": "2023.1.0",
+	"addon_lastTestedNVDAVersion": "2024.1.0",
 	# Add-on update channel (default is None, denoting stable releases,
 	# and for development releases, use "dev".)
 	# Do not change unless you know what you are doing!
 	"addon_updateChannel": None,
+	# Add-on license such as GPL 2
+	"addon_license": "GNU General Public License v2",
+	# URL for the license document the ad-on is licensed under
+	"addon_licenseURL": "https://github.com/grisov/checkGestures/blob/main/COPYING.txt",
 }
 
 # Define the python files that are the sources of your add-on.
@@ -71,5 +77,5 @@ baseLanguage: str = "en"
 # Most add-ons do not require additional Markdown extensions.
 # If you need to add support for markup such as tables, fill out the below list.
 # Extensions string must be of the form "markdown.extensions.extensionName"
-# e.g. markdown.extensions.tables to add tables.
+# e.g. "markdown.extensions.tables" to add tables.
 markdownExtensions: List[str] = []
