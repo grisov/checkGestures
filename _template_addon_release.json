@@ -25,5 +25,5 @@
 	"sha256": "a5f696473b32cbc2185d6f6bc1eb8f06db03a52f406065c33d6cc876b395d74d",
 	"sourceURL": "https://github.com/grisov/checkGestures",
 	"license": "GPL v2",
-	"licenseURL": "https://github.com/grisov/checkGestures/blob/main/COPYING.txt"
+	"licenseURL": "https://www.gnu.org/licenses/gpl-2.0.html"
 }
