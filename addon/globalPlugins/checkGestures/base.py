@@ -3,7 +3,7 @@
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
-# Copyright (C) 2021-2023 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+# Copyright (C) 2021-2025 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
 from typing import Optional, List, Iterator
 
