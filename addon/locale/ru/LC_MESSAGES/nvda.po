@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'checkGestures' '1.0.4'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2021-02-13 21:58+0200\n"
-"PO-Revision-Date: 2025-06-29 19:32+0500\n"
+"POT-Creation-Date: 2025-10-04 14:18+0300\n"
+"PO-Revision-Date: 2025-10-04 14:19+0300\n"
 "Last-Translator: Oleksandr Gryshchenko <grisov.nvaccess@mailnull.com>\n"
-"Language-Team: Russian Language Team, Danil Kostenkov "
+"Language-Team: Russian  translation team <nvda.ru>, Danil Kostenkov "
 "<danilkostenkov38@gmail.com>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -18,61 +18,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.7\n"
 "X-Poedit-Basepath: ../../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: addon\n"
 "X-Poedit-SearchPath-2: addon/globalPlugins/checkGestures\n"
 
-#. Translators: The title of the gestures list dialog and menu item
+#: addon/globalPlugins/checkGestures/__init__.py:32
 msgid "Search for &duplicate gestures"
 msgstr "Поиск &дублирующихся жестов"
 
-#. Translators: The title of the gestures list dialog and menu item
+#: addon/globalPlugins/checkGestures/__init__.py:37
 msgid "Gestures &without description"
 msgstr "Жесты без о&писания"
 
-#. Translators: the name of a submenu item
+#: addon/globalPlugins/checkGestures/__init__.py:61
 msgid "&Help"
 msgstr "Сп&равка"
 
-#. Translators: Notification of no search results
+#: addon/globalPlugins/checkGestures/__init__.py:84
 msgid "Target gestures not found"
 msgstr "Целевые жесты ввода не найдены"
 
-#. Translators: Label above the list of found gestures
-msgid "Select a gesture from the list"
-msgstr "Выберите жест из списка"
-
-#. Translators: The label for a first column in the list of gestures
-msgid "Gesture"
-msgstr "Жест"
-
-#. Translators: The label for the second column in the list of gestures
-msgid "Script description or function name"
-msgstr "Описание сценария или название функции"
-
-#. Translators: The label for the third column in the list of gestures
-msgid "Category"
-msgstr "Категорія"
-
-#. Translators: The message that reports about the absence of the selected gesture in the NVDA Input Gestures dialog
+#: addon/globalPlugins/checkGestures/graphui.py:91
 msgid "This gesture is not represented in the NVDA Input Gestures dialog."
 msgstr "Этот жест не отображается в диалоге жесты ввода NVDA."
 
-#. Translators: The title of the window that reports the lack of description of the selected gesture
+#: addon/globalPlugins/checkGestures/graphui.py:93
 msgid "Gesture without description"
 msgstr "Жест без описания"
 
-#. Add-on summary, usually the user visible name of the addon.
-#. Translators: Summary for this add-on
-#. to be shown on installation and add-on information found in Add-ons Manager.
+#: addon/globalPlugins/checkGestures/graphui.py:138
+#: addon/globalPlugins/checkGestures/graphui.py:195
+#: addon/globalPlugins/checkGestures/graphui.py:209
+msgid "Select a gesture from the list"
+msgstr "Выберите жест из списка"
+
+#: addon/globalPlugins/checkGestures/graphui.py:145
+#: addon/globalPlugins/checkGestures/graphui.py:216
+msgid "Gesture"
+msgstr "Жест"
+
+#: addon/globalPlugins/checkGestures/graphui.py:147
+#: addon/globalPlugins/checkGestures/graphui.py:218
+msgid "Script description or function name"
+msgstr "Описание сценария или название функции"
+
+#: addon/globalPlugins/checkGestures/graphui.py:149
+#: addon/globalPlugins/checkGestures/graphui.py:220
+msgid "Category"
+msgstr "Категория"
+
+#: buildVars.py:24
 msgid "Check Input Gestures"
 msgstr "Check Input Gestures (Проверка жестов ввода)"
 
-#. Add-on description
-#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+#: buildVars.py:27
 msgid "Find and fix input gestures conflicts in NVDA and add-ons."
 msgstr ""
-"Это дополнение выполняет поиск и исправление конфликтов жестов ввода в "
-"NVDA и дополнениях."
+"Это дополнение выполняет поиск и исправление конфликтов жестов ввода в NVDA "
+"и в дополнениях."
