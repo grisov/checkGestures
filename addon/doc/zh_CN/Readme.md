@@ -63,4 +63,3 @@
 2. 运行**scons**命令。如果没有错误的话，创建的插件就会存放在当前目录下。
 
 [1]: https://addons.nvda-project.org/files/get.php?file=cig
-

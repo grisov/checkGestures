@@ -21,8 +21,6 @@ jobs:
         git remote add l10n https://github.com/grisov/checkGestures
         git fetch l10n
         git reset l10n/master addon/doc addon/locale
-        git commit -am "Update translations"
+        git commit -m "Update translations"
         git pull
-        git push
-   
-        
+        # git push

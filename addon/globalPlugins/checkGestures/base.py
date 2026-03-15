@@ -3,43 +3,44 @@
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
-# Copyright (C) 2021-2025 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+# Copyright (C) 2021-2026 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
-from typing import Optional, List, Iterator
+from collections.abc import Iterator
+from typing import override
 
 
-class Gesture(object):
+class Gesture:
 	"""Representation of one input gesture."""
 
 	def __init__(
 		self,
 		gesture: str,
-		category: Optional[str] = None,
-		displayName: Optional[str] = None,
-		className: Optional[str] = None,
-		moduleName: Optional[str] = None,
-		scriptName: Optional[str] = None
+		category: str | None = None,
+		displayName: str | None = None,
+		className: str | None = None,
+		moduleName: str | None = None,
+		scriptName: str | None = None,
 	) -> None:
 		"""Initialization of the main fields of the gesture description.
 		@param gesture: text representation of the input gesture
 		@type gesture: str
 		@param category: the category to which the gesture-related function belongs
-		@type category: Optional[str]
+		@type category: str | None
 		@param displayName: description of the gesture-related function
-		@type displayName: Optional[str]
+		@type displayName: str | None
 		@param className: the name of the class to which the gesture-related function belongs
-		@type className: Optional[str]
+		@type className: str | None
 		@param moduleName: the name of the module to which the associated class belongs
-		@type moduleName: Optional[str]
+		@type moduleName: str | None
 		@param scriptName: the script name of the gesture-bound function
-		@type scriptName: Optional[str]
+		@type scriptName: str | None
 		"""
-		self._gesture = gesture or ''
-		self._category = category or ''
-		self._displayName = displayName or ''
-		self._className = className or ''
-		self._moduleName = moduleName or ''
-		self._scriptName = scriptName or ''
+		self._gesture = gesture or ""
+		self._category = category or ""
+		self._displayName = displayName or ""
+		self._className = className or ""
+		self._moduleName = moduleName or ""
+		self._scriptName = scriptName or ""
 
 	@property
 	def gesture(self) -> str:
@@ -98,23 +99,31 @@ class Gesture(object):
 		"""
 		if not isinstance(other, Gesture):
 			return False
-		return self.gesture == other.gesture and self.displayName == other.displayName and \
-			self.moduleName == other.moduleName and self.scriptName == other.scriptName
+		return (
+			self.gesture == other.gesture
+			and self.displayName == other.displayName
+			and self.moduleName == other.moduleName
+			and self.scriptName == other.scriptName
+		)
 
 	def __repr__(self) -> str:
 		"""Text presentation of input gesture object.
 		@return: text presentation
 		@rtype: str
 		"""
-		return "%s - %s/%s" % (self.gesture, self.category or self.moduleName, self.displayName or self.scriptName)
+		return "%s - %s/%s" % (
+			self.gesture,
+			self.category or self.moduleName,
+			self.displayName or self.scriptName,
+		)
 
 
-class Gestures(object):
+class Gestures:
 	"""Presentation of the input gestures collection."""
 
 	def __init__(self) -> None:
 		"""Initialization of internal fields."""
-		self._all: List[Gesture] = []
+		self._all: list[Gesture] = []
 
 	def __len__(self) -> int:
 		"""The number of gestures in collection.
@@ -140,10 +149,10 @@ class Gestures(object):
 		for gesture in self._all:
 			yield gesture
 
-	def __contains__(self, obj: Optional[Gesture]) -> bool:
+	def __contains__(self, obj: Gesture | None) -> bool:
 		"""Indication of whether an Gesture object is present in the collection.
 		@param obj: gesture object to search in the collection
-		@type obj: Optional[Gesture]
+		@type obj: Gesture | None
 		@return: whether there is an object in the collection
 		@rtype: bool
 		"""
@@ -175,6 +184,7 @@ class Gestures(object):
 		wich displayed in the "Input Gestures" dialog.
 		"""
 		import inputCore
+
 		mapping = inputCore.manager.getAllGestureMappings()
 		for category in list(mapping):
 			for script in mapping[category]:
@@ -186,7 +196,7 @@ class Gestures(object):
 						displayName=obj.displayName,
 						className=obj.className,
 						moduleName=obj.moduleName,
-						scriptName=obj.scriptName
+						scriptName=obj.scriptName,
 					)
 					self.append(gesture)
 
@@ -195,6 +205,7 @@ class Gestures(object):
 		wich not displayed in the "Input Gestures" dialog.
 		"""
 		import globalPluginHandler
+
 		for plugin in globalPluginHandler.runningPlugins:
 			for gest, obj in plugin._gestureMap.items():
 				if obj and not obj.__doc__:
@@ -202,13 +213,14 @@ class Gestures(object):
 						gesture=gest,
 						displayName=obj.__doc__,
 						moduleName=obj.__module__,
-						scriptName=obj.__name__.replace("script_", '')
+						scriptName=obj.__name__.replace("script_", ""),
 					)
 					self.append(gesture)
 
 
-class FilteredGestures(object):
+class FilteredGestures:
 	"""Basic class for filtered collections of input gestures."""
+
 	name: str = ""
 
 	@property
@@ -217,7 +229,7 @@ class FilteredGestures(object):
 		@return: a text string representing the title of the window
 		@rtype: str
 		"""
-		return self.name.replace('&', '')
+		return self.name.replace("&", "")
 
 	@property
 	def menuItem(self) -> str:
@@ -246,23 +258,31 @@ class FilteredGestures(object):
 class Duplicates(FilteredGestures):
 	"""Collection of duplicate input gestures."""
 
+	@override
 	def __iter__(self) -> Iterator[Gesture]:
 		"""Collection of the duplicated input gestures.
 		@return: iterator of the duplicated input gestures
 		@rtype: Iterator[Gesture]
 		"""
 		import config
+
 		gestures = Gestures()
 		gestures.initialize()
-		collection = [gt.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '') for gt in gestures]
+		collection = [
+			gt.gesture.replace("(%s)" % config.conf["keyboard"]["keyboardLayout"], "") for gt in gestures
+		]
 		for gest in gestures:
-			if collection.count(gest.gesture.replace("(%s)" % config.conf['keyboard']['keyboardLayout'], '')) > 1:
+			if (
+				collection.count(gest.gesture.replace("(%s)" % config.conf["keyboard"]["keyboardLayout"], ""))
+				> 1
+			):
 				yield gest
 
 
 class Unsigned(FilteredGestures):
 	"""Collection of input gestures binded to functions without a text description."""
 
+	@override
 	def __iter__(self) -> Iterator[Gesture]:
 		"""Collection of the unsigned input gestures.
 		@return: iterator of the unsigned input gestures

@@ -1,18 +1,21 @@
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
-# Copyright (C) 2021-2025 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+# Copyright (C) 2021-2026 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+
+from collections.abc import Callable
+from typing import override
 
 import addonHandler
-import globalPluginHandler
-from globalVars import appArgs
-import gui
-import wx
 import config
-from typing import Callable
+import globalPluginHandler
+import gui
+import wx  # type: ignore
+from globalVars import appArgs
+from inputCore import InputGesture
 from logHandler import log
 from scriptHandler import script
-from inputCore import InputGesture
+
 from . import base
 from .graphui import DuplicatedGesturesDialog, UnsignedGesturesDialog
 
@@ -22,9 +25,9 @@ except addonHandler.AddonError:
 	log.warning("Unable to init translations. This may be because the addon is running from NVDA scratchpad.")
 _: Callable[[str], str]
 
-curAddon = addonHandler.getCodeAddon()
-ADDON_NAME: str = curAddon.manifest['name']
-ADDON_SUMMARY: str = curAddon.manifest['summary']
+_addon = addonHandler.getCodeAddon()
+ADDON_NAME: str = _addon.manifest["name"]
+ADDON_SUMMARY: str = _addon.manifest["summary"]
 
 
 class Duplicates(base.Duplicates):
@@ -39,8 +42,10 @@ class Unsigned(base.Unsigned):
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	"""Implementation global commands of NVDA add-on"""
+
 	scriptCategory: str = ADDON_SUMMARY
 
+	@override
 	def __init__(self, *args, **kwargs) -> None:
 		"""Initialization of the add-on global plugin."""
 		super(GlobalPlugin, self).__init__(*args, **kwargs)
@@ -61,13 +66,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		helpItem: wx.MenuItem = subMenu.Append(wx.ID_ANY, _("&Help"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onHelp, helpItem)
 
-	def terminate(self, *args, **kwargs) -> None:
+	@override
+	def terminate(self) -> None:
 		"""This will be called when NVDA is finished with this global plugin"""
-		super().terminate(*args, **kwargs)
 		try:
 			self.menu.Remove(self.mainItem)
 		except (RuntimeError, AttributeError):
 			pass
+		super().terminate()
 
 	def checkGestures(self, gestures: base.FilteredGestures) -> None:
 		"""Show a list of gestures in a separate window,
@@ -76,15 +82,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@type gestures: base.FilteredGestures
 		"""
 		if len(gestures) > 0:
-			GesturesDialog = DuplicatedGesturesDialog if isinstance(gestures, Duplicates) else UnsignedGesturesDialog
-			gui.mainFrame._popupSettingsDialog(GesturesDialog, title=gestures.title, gestures=gestures)
+			GesturesDialog = (
+				DuplicatedGesturesDialog if isinstance(gestures, Duplicates) else UnsignedGesturesDialog
+			)
+			gui.mainFrame.popupSettingsDialog(GesturesDialog, title=gestures.title, gestures=gestures)
 		else:
 			gui.messageBox(
 				# Translators: Notification of no search results
 				message=_("Target gestures not found"),
 				caption=gestures.title,
 				style=wx.OK | wx.ICON_ERROR,
-				parent=gui.mainFrame)
+				parent=gui.mainFrame,
+			)
 
 	def onCheckDuplicates(self, event: wx.PyEvent) -> None:
 		"""Show the collection of duplicate gestures in separate window.
@@ -106,7 +115,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@type event: wx.PyEvent
 		"""
 		import webbrowser
-		webbrowser.open(curAddon.getDocFilePath())
+
+		webbrowser.open(_addon.getDocFilePath())
 
 	@script(description=Duplicates().title)
 	def script_duplicates(self, gesture: InputGesture) -> None:
