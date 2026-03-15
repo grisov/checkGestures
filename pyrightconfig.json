@@ -1,0 +1,9 @@
+{
+    "venvPath": "C:/dev/nvda",
+    "venv": ".venv",
+    "extraPaths": [
+        "C:/dev/nvda/nvda/source"
+    ],
+    "typeCheckingMode": "basic",
+    "reportMissingImports": true
+}

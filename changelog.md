@@ -1,0 +1,1 @@
+- The add-on has been tested for compatibility with NVDA 2026.1
