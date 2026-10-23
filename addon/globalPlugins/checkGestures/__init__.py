@@ -18,7 +18,7 @@ from logHandler import log
 from scriptHandler import script
 
 from . import base
-from .configuration import ADDON_NAME, ADDON_SUMMARY, confspec, getAddonConfig, saveAddonConfig
+from .configuration import ADDON_NAME, ADDON_SUMMARY, confspec, getAddonConfig, rememberDuplicates
 from .graphui import DuplicatedGesturesDialog, UnsignedGesturesDialog
 
 try:
@@ -94,35 +94,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def checkOnStartup(self) -> None:
 		"""Show the duplicate gestures if new ones have appeared since the last search,
 		e.g. after an add-on has been installed, and if it is enabled in the add-on configuration.
+		The duplicates are remembered when the window is closed with OK; after Cancel they are shown again next time.
 		"""
 		if not getAddonConfig()["checkOnStartup"]:
 			return
 		duplicates = Duplicates()
-		known = set(getAddonConfig()["knownDuplicates"])
-		signatures = self.getSignatures(duplicates)
-		self.rememberDuplicates(signatures)
-		if signatures - known:
+		signatures = base.getSignatures(duplicates.groups())
+		if signatures - set(getAddonConfig()["knownDuplicates"]):
 			self.showGestures(duplicates)
-
-	def getSignatures(self, duplicates: base.Duplicates) -> set[str]:
-		"""Get the signatures of all duplicate gestures found now.
-		@param duplicates: the collection of the duplicate gestures
-		@type duplicates: base.Duplicates
-		@return: the signatures of the duplicates
-		@rtype: set[str]
-		"""
-		signatures: set[str] = set()
-		for group in duplicates.groups():
-			signatures.update(group.signatures())
-		return signatures
-
-	def rememberDuplicates(self, signatures: set[str]) -> None:
-		"""Save the duplicates found now, so only new duplicates are shown when NVDA starts next time.
-		@param signatures: the signatures of the duplicates found now
-		@type signatures: set[str]
-		"""
-		if signatures != set(getAddonConfig()["knownDuplicates"]):
-			saveAddonConfig({"knownDuplicates": sorted(signatures)})
+		else:
+			# Nothing new: the duplicates that have been resolved meanwhile are forgotten
+			rememberDuplicates(signatures)
 
 	def checkGestures(self, gestures: base.FilteredGestures) -> None:
 		"""Show a list of gestures in a separate window,
@@ -131,9 +113,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@type gestures: base.FilteredGestures
 		"""
 		if len(gestures) > 0:
-			if isinstance(gestures, Duplicates):
-				# All duplicates are shown now, so they are not new when NVDA starts next time
-				self.rememberDuplicates(self.getSignatures(gestures))
 			self.showGestures(gestures)
 		else:
 			# The pressed button is not needed; "_" cannot take the result, it translates the message below

@@ -34,6 +34,15 @@ def getAddonConfig() -> MutableMapping[str, Any]:
 	return cast(Any, config.conf)[ADDON_NAME]
 
 
+def rememberDuplicates(signatures: set[str]) -> None:
+	"""Save the duplicates that the user has seen, so only new duplicates are shown when NVDA starts next time.
+	@param signatures: the signatures of the duplicates
+	@type signatures: set[str]
+	"""
+	if signatures != set(getAddonConfig()["knownDuplicates"]):
+		saveAddonConfig({"knownDuplicates": sorted(signatures)})
+
+
 def saveAddonConfig(options: dict[str, Any]) -> None:
 	"""Save the options of the add-on in the base configuration profile of NVDA,
 	so they apply whatever configuration profile is active.

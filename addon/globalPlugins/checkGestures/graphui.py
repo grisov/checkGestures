@@ -24,8 +24,8 @@ from gui.settingsDialogs import SettingsDialog
 from inputCore import getDisplayTextForGestureIdentifier
 from logHandler import log
 
-from .base import DuplicateGroup, Duplicates, FilteredGestures, Gesture
-from .configuration import getAddonConfig, saveAddonConfig
+from .base import DuplicateGroup, Duplicates, FilteredGestures, Gesture, getSignatures
+from .configuration import getAddonConfig, rememberDuplicates, saveAddonConfig
 
 try:
 	addonHandler.initTranslation()
@@ -215,6 +215,7 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 		gesture = self.gestureInFocus()
 		if self.unsignedGestureWarning():
 			return
+		self.onAccepted()
 		evt.Skip()
 		self.Destroy()
 		if gesture is None:
@@ -225,6 +226,10 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 			search=gesture.displayName or gesture.scriptName,
 			gesture=gesture,
 		)
+
+	def onAccepted(self) -> None:
+		"""Called when the window is closed with OK, before the gesture in focus is shown."""
+		pass
 
 
 class UnsignedGesturesDialog(BaseGesturesDialog):
@@ -321,6 +326,8 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 		# Fill in the tree, all branches are collapsed
 		root = tree.AddRoot("")
 		groups = self.gestures.groups() if isinstance(self.gestures, Duplicates) else []
+		# The duplicates shown in the window, remembered when it is closed with OK
+		self._groups = groups
 		for group in sorted(groups, key=lambda item: getDuplicateDisplayText(item).casefold()):
 			groupItem = tree.AppendItem(root, getDuplicateDisplayText(group))
 			# The layout of each script is shown only if the duplicate mixes several layouts
@@ -363,6 +370,13 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 				self.gesturesTree.Toggle(item)
 			return
 		super()._enterActivatesOk_ctrlSActivatesApply(evt)
+
+	@override
+	def onAccepted(self) -> None:
+		"""The duplicates in the window have been seen, so they are not shown again when NVDA starts,
+		until new ones appear. After Cancel or Escape they are shown again when NVDA starts next time.
+		"""
+		rememberDuplicates(getSignatures(self._groups))
 
 	def onNoStartupCheck(self, evt: wx.CommandEvent) -> None:
 		"""Save the option at once, so it applies whichever button closes the window.

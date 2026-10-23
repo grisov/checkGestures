@@ -314,6 +314,19 @@ class DuplicateGroup:
 		]
 
 
+def getSignatures(groups: list[DuplicateGroup]) -> set[str]:
+	"""Get the signatures of all gestures of the duplicates.
+	@param groups: the duplicates
+	@type groups: list[DuplicateGroup]
+	@return: the signatures
+	@rtype: set[str]
+	"""
+	signatures: set[str] = set()
+	for group in groups:
+		signatures.update(group.signatures())
+	return signatures
+
+
 def getLayoutSuffix() -> str:
 	"""The current keyboard layout as it is written in the identifiers of the gestures, e.g. "(laptop)".
 	@return: the layout in parentheses
