@@ -192,22 +192,6 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 		@type sizer: wx.Sizer
 		"""
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=sizer)
-		sHelper.addItem(
-			wx.StaticText(
-				self,
-				# Translators: Label above the tree of found duplicated gestures
-				label=_("Select a gesture from the list"),
-				style=wx.ALIGN_LEFT,
-			),
-		)
-		self.gesturesList = sHelper.addItem(
-			wx.TreeCtrl(
-				self,
-				size=wx.Size(600, 400),
-				style=wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_LINES_AT_ROOT | wx.TR_SINGLE,
-			),
-		)
-		# ***
 		self.gesturesList = sHelper.addLabeledControl(
 			# Translators: Label in the window displaying duplicate gestures
 			_("Select a gesture from the list"),
