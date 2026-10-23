@@ -68,19 +68,76 @@ def getDuplicateDisplayText(group: DuplicateGroup) -> str:
 
 
 class InputGesturesDialogWithSearch(InputGesturesDialog):
-	"""Overridden standard NVDA Input Gestures dialog with search at initialization."""
+	"""Overridden standard NVDA Input Gestures dialog with search at initialization
+	and, if possible, with the given gesture selected.
+	"""
 
-	def __init__(self, parent: wx.Window, search: str = "", *args: Any, **kwargs: Any) -> None:
+	def __init__(
+		self,
+		parent: wx.Window,
+		search: str = "",
+		gesture: Gesture | None = None,
+		*args: Any,
+		**kwargs: Any,
+	) -> None:
 		"""Initialization of the Input Gestures dialog with a search query.
 		@param parent: The parent for this dialog.
 		@type parent: wx.Window
 		@param search: Search query.
 		@type search: str
+		@param gesture: the gesture to select after the search
+		@type gesture: Gesture | None
 		"""
 		# SettingsDialog works with any parent window, NVDA annotates it as a dialog
 		super().__init__(parent, *args, **kwargs)  # pyright: ignore[reportArgumentType]
 		if search:
 			self.filterCtrl.SetValue(search)
+		if gesture is not None:
+			# Selected after the dialog has been shown, so the selected item gets the focus
+			wx.CallAfter(self.selectGesture, gesture)
+
+	def selectGesture(self, gesture: Gesture) -> None:
+		"""Expand the category and the script of the gesture and select the gesture itself,
+		so it can be changed or removed at once. This uses the internal view model of the NVDA dialog,
+		which may change in a future version of NVDA: then only the search result is shown, as before.
+		@param gesture: the gesture to select
+		@type gesture: Gesture
+		"""
+		try:
+			if not self.findAndSelect(gesture):
+				log.debugWarning(f"The gesture is not found in the Input Gestures dialog: {gesture!r}")
+		except Exception:
+			log.debugWarning("Unable to select the gesture in the Input Gestures dialog", exc_info=True)
+
+	def findAndSelect(self, gesture: Gesture) -> bool:
+		"""Find the gesture in the internal view model of the NVDA dialog and select it.
+		@param gesture: the gesture to select
+		@type gesture: Gesture
+		@return: whether the script of the gesture has been found and selected
+		@rtype: bool
+		"""
+		# The view model of the NVDA dialog is internal and has no complete type annotations
+		dialog = cast(Any, self)
+		script = (gesture.scriptName, gesture.moduleName, gesture.className)
+		for categoryVM in dialog.gesturesVM.filteredGestures:
+			if categoryVM.displayName != gesture.category:
+				continue
+			for scriptVM in categoryVM.scripts:
+				info = scriptVM.scriptInfo
+				if (info.scriptName, info.moduleName, info.className) != script:
+					continue
+				gestureVM = next(
+					(
+						item
+						for item in scriptVM.gestures
+						if getattr(item, "normalizedGestureIdentifier", None) == gesture.gesture
+					),
+					None,
+				)
+				# Without the gesture, e.g. if it has been removed meanwhile, its script is selected
+				dialog.tree.doRefresh(focus=(categoryVM, scriptVM, gestureVM))
+				return True
+		return False
 
 
 class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
@@ -165,6 +222,7 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 		cast(Any, gui.mainFrame).popupSettingsDialog(
 			InputGesturesDialogWithSearch,
 			search=gesture.displayName or gesture.scriptName,
+			gesture=gesture,
 		)
 
 
