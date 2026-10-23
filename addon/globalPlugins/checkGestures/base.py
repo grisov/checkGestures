@@ -289,6 +289,17 @@ class DuplicateGroup:
 	key: str
 	gestures: list[Gesture]
 
+	def signatures(self) -> set[str]:
+		"""The signatures of the gestures of the duplicate, which do not depend on the language of NVDA:
+		the keys and the script of each gesture, so a script that has got the same keys makes a new duplicate.
+		@return: the signatures
+		@rtype: set[str]
+		"""
+		return {
+			f"{self.key} {gesture.moduleName}.{gesture.className}.{gesture.scriptName}"
+			for gesture in self.gestures
+		}
+
 	def categories(self) -> list[tuple[str, list[Gesture]]]:
 		"""The gestures of the duplicate grouped by their categories, both sorted by name.
 		@return: the category labels with their gestures

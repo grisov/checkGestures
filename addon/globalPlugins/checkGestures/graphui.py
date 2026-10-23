@@ -25,6 +25,7 @@ from inputCore import getDisplayTextForGestureIdentifier
 from logHandler import log
 
 from .base import DuplicateGroup, Duplicates, FilteredGestures, Gesture
+from .configuration import getAddonConfig, saveAddonConfig
 
 try:
 	addonHandler.initTranslation()
@@ -307,6 +308,12 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 			style=wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_LINES_AT_ROOT | wx.TR_SINGLE,
 		)
 		tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.onItemActivated)
+		self.noStartupCheck = sHelper.addItem(
+			# Translators: A check box in the window of duplicate gestures
+			wx.CheckBox(self, label=_("&Don't show this window on startup")),
+		)
+		self.noStartupCheck.SetValue(not getAddonConfig()["checkOnStartup"])
+		self.noStartupCheck.Bind(wx.EVT_CHECKBOX, self.onNoStartupCheck)
 
 		sizer.Fit(self)
 		self.Center(wx.BOTH | wx.Center)
@@ -356,6 +363,13 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 				self.gesturesTree.Toggle(item)
 			return
 		super()._enterActivatesOk_ctrlSActivatesApply(evt)
+
+	def onNoStartupCheck(self, evt: wx.CommandEvent) -> None:
+		"""Save the option at once, so it applies whichever button closes the window.
+		@param evt: event binder object that handles the change of the check box
+		@type evt: wx.CommandEvent
+		"""
+		saveAddonConfig({"checkOnStartup": not self.noStartupCheck.GetValue()})
 
 	def onItemActivated(self, evt: wx.TreeEvent) -> None:
 		"""A double click on a gesture opens it, a double click on a branch expands or collapses it as usual.

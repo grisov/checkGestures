@@ -8,6 +8,7 @@ from typing import Any, cast, override
 
 import addonHandler
 import config
+import core
 import globalPluginHandler
 import gui
 import wx
@@ -17,6 +18,7 @@ from logHandler import log
 from scriptHandler import script
 
 from . import base
+from .configuration import ADDON_NAME, ADDON_SUMMARY, confspec, getAddonConfig, saveAddonConfig
 from .graphui import DuplicatedGesturesDialog, UnsignedGesturesDialog
 
 try:
@@ -27,8 +29,9 @@ _: Callable[[str], str]
 
 # The manifest of the add-on has no type annotations
 _addon = cast(Any, addonHandler).getCodeAddon()
-ADDON_NAME: str = _addon.manifest["name"]
-ADDON_SUMMARY: str = _addon.manifest["summary"]
+# Delay after NVDA has started before the search for new duplicate gestures, in milliseconds,
+# so the add-ons and other components that are loaded after NVDA has started have bound their gestures too
+STARTUP_CHECK_DELAY = 10000
 
 
 class Duplicates(base.Duplicates):
@@ -50,9 +53,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		"""Initialization of the add-on global plugin."""
 		super().__init__(*args, **kwargs)
+		# The configuration of NVDA has no type annotations
+		cast(Any, config).conf.spec[ADDON_NAME] = confspec
 		if appArgs.secure or config.isAppX:
 			return
 		self.createMenu()
+		# core.postNvdaStartup of NVDA has no type annotations
+		cast(Any, core).postNvdaStartup.register(self.onNvdaStartup)
 
 	def createMenu(self) -> None:
 		"""Build a submenu in the NVDA "tools" menu."""
@@ -77,7 +84,45 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			_ = self.menu.Remove(self.mainItem)
 		except (RuntimeError, AttributeError):
 			pass
+		_ = cast(Any, core).postNvdaStartup.unregister(self.onNvdaStartup)
 		super().terminate()
+
+	def onNvdaStartup(self) -> None:
+		"""Schedule the search for new duplicate gestures, as late as possible after NVDA has started."""
+		cast(Any, core).callLater(STARTUP_CHECK_DELAY, self.checkOnStartup)
+
+	def checkOnStartup(self) -> None:
+		"""Show the duplicate gestures if new ones have appeared since the last search,
+		e.g. after an add-on has been installed, and if it is enabled in the add-on configuration.
+		"""
+		if not getAddonConfig()["checkOnStartup"]:
+			return
+		duplicates = Duplicates()
+		known = set(getAddonConfig()["knownDuplicates"])
+		signatures = self.getSignatures(duplicates)
+		self.rememberDuplicates(signatures)
+		if signatures - known:
+			self.showGestures(duplicates)
+
+	def getSignatures(self, duplicates: base.Duplicates) -> set[str]:
+		"""Get the signatures of all duplicate gestures found now.
+		@param duplicates: the collection of the duplicate gestures
+		@type duplicates: base.Duplicates
+		@return: the signatures of the duplicates
+		@rtype: set[str]
+		"""
+		signatures: set[str] = set()
+		for group in duplicates.groups():
+			signatures.update(group.signatures())
+		return signatures
+
+	def rememberDuplicates(self, signatures: set[str]) -> None:
+		"""Save the duplicates found now, so only new duplicates are shown when NVDA starts next time.
+		@param signatures: the signatures of the duplicates found now
+		@type signatures: set[str]
+		"""
+		if signatures != set(getAddonConfig()["knownDuplicates"]):
+			saveAddonConfig({"knownDuplicates": sorted(signatures)})
 
 	def checkGestures(self, gestures: base.FilteredGestures) -> None:
 		"""Show a list of gestures in a separate window,
@@ -86,15 +131,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		@type gestures: base.FilteredGestures
 		"""
 		if len(gestures) > 0:
-			GesturesDialog = (
-				DuplicatedGesturesDialog if isinstance(gestures, Duplicates) else UnsignedGesturesDialog
-			)
-			# gui.mainFrame is None only until the GUI of NVDA has been initialized
-			cast(Any, gui.mainFrame).popupSettingsDialog(
-				GesturesDialog,
-				title=gestures.title,
-				gestures=gestures,
-			)
+			if isinstance(gestures, Duplicates):
+				# All duplicates are shown now, so they are not new when NVDA starts next time
+				self.rememberDuplicates(self.getSignatures(gestures))
+			self.showGestures(gestures)
 		else:
 			# The pressed button is not needed; "_" cannot take the result, it translates the message below
 			gui.messageBox(  # pyright: ignore[reportUnusedCallResult]
@@ -104,6 +144,21 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				style=wx.OK | wx.ICON_ERROR,
 				parent=gui.mainFrame,
 			)
+
+	def showGestures(self, gestures: base.FilteredGestures) -> None:
+		"""Show the collection of gestures in a separate window.
+		@param gestures: filtered collection of input gestures
+		@type gestures: base.FilteredGestures
+		"""
+		GesturesDialog = (
+			DuplicatedGesturesDialog if isinstance(gestures, Duplicates) else UnsignedGesturesDialog
+		)
+		# gui.mainFrame is None only until the GUI of NVDA has been initialized
+		cast(Any, gui.mainFrame).popupSettingsDialog(
+			GesturesDialog,
+			title=gestures.title,
+			gestures=gestures,
+		)
 
 	def onCheckDuplicates(self, event: wx.PyEvent | None) -> None:
 		"""Show the collection of duplicate gestures in separate window.
