@@ -34,6 +34,22 @@ except addonHandler.AddonError:
 _: Callable[[str], str]
 
 
+def describeGesture(identifier: str) -> tuple[str, str]:
+	"""Get the source and the keys of the input gesture as NVDA shows them, e.g. ("keyboard, all layouts", "NVDA+F1").
+	If NVDA cannot describe the gesture, e.g. its source is not registered because its add-on is not running,
+	the parts of the identifier are shown as they are, as in the NVDA Input Gestures dialog.
+	@param identifier: the identifier of the input gesture
+	@type identifier: str
+	@return: the source and the keys of the gesture
+	@rtype: tuple[str, str]
+	"""
+	try:
+		source, keys = getDisplayTextForGestureIdentifier(identifier)
+	except LookupError:
+		source, _separator, keys = identifier.partition(":")
+	return source, keys
+
+
 def getGestureDisplayText(identifier: str) -> str:
 	"""Get the text of the input gesture as NVDA shows it, with its source, e.g. "NVDA+F1 (keyboard)".
 	@param identifier: the identifier of the input gesture
@@ -41,7 +57,7 @@ def getGestureDisplayText(identifier: str) -> str:
 	@return: the text of the gesture
 	@rtype: str
 	"""
-	source, keys = getDisplayTextForGestureIdentifier(identifier)
+	source, keys = describeGesture(identifier)
 	return f"{keys} ({source})"
 
 
@@ -52,7 +68,7 @@ def getGestureSource(identifier: str) -> str:
 	@return: the source of the gesture
 	@rtype: str
 	"""
-	return getDisplayTextForGestureIdentifier(identifier)[0]
+	return describeGesture(identifier)[0]
 
 
 def getDuplicateDisplayText(group: DuplicateGroup) -> str:
@@ -63,7 +79,7 @@ def getDuplicateDisplayText(group: DuplicateGroup) -> str:
 	@return: the text of the duplicate
 	@rtype: str
 	"""
-	keys = getDisplayTextForGestureIdentifier(group.key)[1]
+	keys = describeGesture(group.key)[1]
 	sources = sorted({getGestureSource(gesture.gesture) for gesture in group.gestures})
 	return f"{keys} ({'; '.join(sources)})"
 

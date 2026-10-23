@@ -18,7 +18,7 @@ from logHandler import log
 from scriptHandler import script
 
 from . import base
-from .configuration import ADDON_SUMMARY, getKnownDuplicates, isCheckOnStartup, rememberDuplicates
+from .configuration import ADDON_SUMMARY, getKnownDuplicates, isCheckOnStartup
 from .graphui import DuplicatedGesturesDialog, UnsignedGesturesDialog
 
 try:
@@ -97,12 +97,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not isCheckOnStartup():
 			return
 		duplicates = Duplicates()
-		signatures = base.getSignatures(duplicates.groups())
-		if signatures - getKnownDuplicates():
+		if base.getSignatures(duplicates.groups()) - getKnownDuplicates():
 			self.showGestures(duplicates)
-		else:
-			# Nothing new: the duplicates that have been resolved meanwhile are forgotten
-			rememberDuplicates(signatures)
 
 	def checkGestures(self, gestures: base.FilteredGestures) -> None:
 		"""Show a list of gestures in a separate window,
@@ -145,7 +141,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.checkGestures(Duplicates())
 
 	def onCheckUnsigned(self, event: wx.PyEvent | None) -> None:
-		"""Show the collection of gestures wich binded to features without description in separate window.
+		"""Show the collection of gestures which are bound to features without description in separate window.
 		@param event: event binder object that specifies the activation of wx.Menu item
 		@type event: wx.PyEvent | None
 		"""

@@ -83,9 +83,12 @@ def getKnownDuplicates() -> set[str]:
 
 
 def rememberDuplicates(signatures: set[str]) -> None:
-	"""Save the duplicates that the user has seen, so only new duplicates are shown when NVDA starts next time.
+	"""Add the duplicates that the user has seen to the saved ones, so only new duplicates are shown when NVDA starts.
+	The duplicates found depend on the focus, e.g. the commands of the program in focus or of browse mode,
+	so the duplicates seen before are kept even if they are not found now.
 	@param signatures: the signatures of the duplicates
 	@type signatures: set[str]
 	"""
-	if signatures != getKnownDuplicates():
-		_save(knownDuplicates=sorted(signatures))
+	known = getKnownDuplicates()
+	if not signatures <= known:
+		_save(knownDuplicates=sorted(known | signatures))

@@ -80,7 +80,7 @@ class Gesture:
 	@property
 	def displayName(self) -> str:
 		"""Text description of the gesture-bound feature.
-		@return: text description of the function or empty stringn
+		@return: text description of the function or empty string
 		@rtype: str
 		"""
 		return self._displayName
@@ -195,15 +195,15 @@ class Gestures:
 	def initialize(self) -> None:
 		"""Scan all input gestures used in NVDA.
 		Procedure for scanning input gestures:
-		1. Gestures binded to functions with text description (displayed in the "Input Gestures" dialog).
+		1. Gestures bound to functions with text description (displayed in the "Input Gestures" dialog).
 		2. Gestures related to functions without a text description.
 		"""
 		self.signed()
 		self.unsigned()
 
 	def signed(self) -> None:
-		"""Scan gestures binded to functions with text description
-		wich displayed in the "Input Gestures" dialog.
+		"""Scan gestures bound to functions with text description
+		which are displayed in the "Input Gestures" dialog.
 		"""
 		import gui
 		import inputCore
@@ -233,8 +233,8 @@ class Gestures:
 					self.append(gesture)
 
 	def unsigned(self) -> None:
-		"""Scan gestures binded to functions without text description
-		wich not displayed in the "Input Gestures" dialog.
+		"""Scan gestures bound to functions without text description
+		which are not displayed in the "Input Gestures" dialog.
 		"""
 		import globalPluginHandler
 
@@ -380,7 +380,7 @@ class Duplicates(FilteredGestures):
 
 
 class Unsigned(FilteredGestures):
-	"""Collection of input gestures binded to functions without a text description."""
+	"""Collection of input gestures bound to functions without a text description."""
 
 	@override
 	def __iter__(self) -> Iterator[Gesture]:

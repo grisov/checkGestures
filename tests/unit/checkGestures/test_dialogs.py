@@ -86,6 +86,12 @@ class TestTree(TreeTestCase):
 			],
 		)
 
+	def test_gesture_that_nvda_cannot_describe_is_shown_by_its_identifier(self):
+		# E.g. the source of the gesture belongs to an add-on that is not running
+		self.addScript("Tools", "Speech viewer", "custom(device):k1")
+		self.addScript("Logger", "Start logging", "custom(device):k1")
+		self.assertEqual(self.outline(self.createTree())[0], "k1 (custom(device))")
+
 	def test_duplicates_are_sorted_and_collapsed_with_the_first_one_selected(self):
 		self.addScript("Tools", "Speech viewer", "kb:NVDA+y", "kb:NVDA+a")
 		self.addScript("Logger", "Start logging", "kb:NVDA+y", "kb:NVDA+a")

@@ -27,6 +27,11 @@ class TestConfiguration(AddonTestCase):
 		self.assertFalse(configuration.isCheckOnStartup())
 		self.assertEqual(configuration.getKnownDuplicates(), {"kb:NVDA+x a.B.c", "kb:NVDA+x d.E.f"})
 
+	def test_seen_duplicates_are_added_to_the_saved_ones(self):
+		configuration.rememberDuplicates({"kb:NVDA+x a.B.c"})
+		configuration.rememberDuplicates({"kb:NVDA+y d.E.f"})
+		self.assertEqual(configuration.getKnownDuplicates(), {"kb:NVDA+x a.B.c", "kb:NVDA+y d.E.f"})
+
 	def test_the_same_duplicates_are_not_written_again(self):
 		configuration.rememberDuplicates({"kb:NVDA+x a.B.c"})
 		saved = []

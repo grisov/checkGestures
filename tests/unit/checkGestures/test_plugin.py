@@ -5,7 +5,7 @@
 
 """The global plugin: its menu, its commands and the search for new duplicates after NVDA has started."""
 
-from checkGesturesSupport import addon, appArgs, events, later, module, postNvdaStartup, runLater
+from checkGesturesSupport import addon, appArgs, events, later, mappings, module, postNvdaStartup, runLater
 from checkGesturesSupport.case import AddonTestCase
 
 configuration = module("configuration")
@@ -93,10 +93,26 @@ class TestSearchOnStartup(AddonTestCase):
 		# Only the delayed search itself, neither a window nor a message
 		self.assertEqual([event for event in events if event[0] != "later"], [])
 
-	def test_resolved_duplicates_are_forgotten(self):
-		configuration.rememberDuplicates({"kb:NVDA+q old.Old.removed"})
+	def test_duplicates_seen_with_another_focus_are_kept(self):
+		configuration.rememberDuplicates({"kb:NVDA+q appModules.explorer.AppModule.script"})
 		self.startNvda()
-		self.assertEqual(configuration.getKnownDuplicates(), set())
+		self.assertEqual(configuration.getKnownDuplicates(), {"kb:NVDA+q appModules.explorer.AppModule.script"})
+
+	def test_duplicates_of_different_programs_in_focus_are_not_shown_again(self):
+		# The duplicates found when NVDA starts depend on the program in focus
+		self.addScript("Explorer", "Rename", "kb:NVDA+q", moduleName="appModules.explorer", className="AppModule")
+		self.addScript("Tools", "Speech viewer", "kb:NVDA+q")
+		explorer = self.base.getSignatures(self.base.Duplicates().groups())
+		configuration.rememberDuplicates(explorer)
+		mappings.pop("Explorer")
+		self.addScript("Browse mode", "Find", "kb:NVDA+q", moduleName="browseMode", className="BrowseModeTreeInterceptor")
+		self.startNvda()
+		self.assertEqual(len(self.dialogs()), 1)
+		configuration.rememberDuplicates(self.base.getSignatures(self.base.Duplicates().groups()))
+		mappings.pop("Browse mode")
+		self.addScript("Explorer", "Rename", "kb:NVDA+q", moduleName="appModules.explorer", className="AppModule")
+		self.startNvda()
+		self.assertEqual(self.dialogs(), [])
 
 	def test_not_searched_when_it_is_turned_off(self):
 		self.addDuplicate()

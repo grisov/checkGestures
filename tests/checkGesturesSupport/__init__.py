@@ -139,6 +139,8 @@ _SOURCES = {
 def getDisplayTextForGestureIdentifier(identifier: str) -> tuple[str, str]:
 	"""Stands for inputCore.getDisplayTextForGestureIdentifier, e.g. ("keyboard, all layouts", "NVDA+Shift+L")."""
 	device, keys = identifier.split(":", 1)
+	if device not in _SOURCES:
+		raise LookupError(f"Gesture source not registered: {device}")
 	return _SOURCES[device], "+".join(key if key == "NVDA" else key.capitalize() for key in keys.split("+"))
 
 
