@@ -18,7 +18,7 @@ from logHandler import log
 from scriptHandler import script
 
 from . import base
-from .configuration import ADDON_NAME, ADDON_SUMMARY, confspec, getAddonConfig, rememberDuplicates
+from .configuration import ADDON_SUMMARY, getKnownDuplicates, isCheckOnStartup, rememberDuplicates
 from .graphui import DuplicatedGesturesDialog, UnsignedGesturesDialog
 
 try:
@@ -31,7 +31,7 @@ _: Callable[[str], str]
 _addon = cast(Any, addonHandler).getCodeAddon()
 # Delay after NVDA has started before the search for new duplicate gestures, in milliseconds,
 # so the add-ons and other components that are loaded after NVDA has started have bound their gestures too
-STARTUP_CHECK_DELAY = 10000
+STARTUP_CHECK_DELAY = 5000
 
 
 class Duplicates(base.Duplicates):
@@ -53,8 +53,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		"""Initialization of the add-on global plugin."""
 		super().__init__(*args, **kwargs)
-		# The configuration of NVDA has no type annotations
-		cast(Any, config).conf.spec[ADDON_NAME] = confspec
 		if appArgs.secure or config.isAppX:
 			return
 		self.createMenu()
@@ -96,11 +94,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		e.g. after an add-on has been installed, and if it is enabled in the add-on configuration.
 		The duplicates are remembered when the window is closed with OK; after Cancel they are shown again next time.
 		"""
-		if not getAddonConfig()["checkOnStartup"]:
+		if not isCheckOnStartup():
 			return
 		duplicates = Duplicates()
 		signatures = base.getSignatures(duplicates.groups())
-		if signatures - set(getAddonConfig()["knownDuplicates"]):
+		if signatures - getKnownDuplicates():
 			self.showGestures(duplicates)
 		else:
 			# Nothing new: the duplicates that have been resolved meanwhile are forgotten

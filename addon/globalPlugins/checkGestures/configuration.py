@@ -1,37 +1,85 @@
 # configuration.py
-# The options of the add-on in the NVDA configuration
+# The name of the add-on and its data saved in a separate file
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 # Copyright (C) 2021-2026 Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>
 
-from collections.abc import MutableMapping
+import json
+from os import path
 from typing import Any, cast
 
 import addonHandler
-import config
+from globalVars import appArgs
+from logHandler import log
 
 # The manifest of the add-on has no type annotations
 _addon = cast(Any, addonHandler).getCodeAddon()
 ADDON_NAME: str = _addon.manifest["name"]
 ADDON_SUMMARY: str = _addon.manifest["summary"]
 
-# The options of the add-on in the NVDA configuration
-confspec: dict[str, str] = {
-	# Search for duplicate gestures after NVDA has started and show the new ones
-	"checkOnStartup": "boolean(default=true)",
-	# The duplicates found by the last search, so only new duplicates are shown when NVDA starts
-	"knownDuplicates": "string_list(default=list())",
-}
+# The data of the add-on is saved in its own file in the NVDA configuration folder at once, not in the configuration
+# of NVDA: NVDA may be set not to save its configuration on exit, and saving it would save other unsaved changes too.
+# appArgs of NVDA has no type annotations
+_FILE: str = path.join(cast(Any, appArgs).configPath, ADDON_NAME + ".json")
 
 
-def getAddonConfig() -> MutableMapping[str, Any]:
-	"""Get the add-on section of the NVDA configuration in the current configuration profile.
-	NVDA declares config.conf as None until the configuration is loaded, so its type is given here once.
-	@return: the options of the add-on
-	@rtype: MutableMapping[str, Any]
+def _load() -> dict[str, Any]:
+	"""Load the saved data of the add-on.
+	@return: the data, empty if it has not been saved yet or cannot be read
+	@rtype: dict[str, Any]
 	"""
-	return cast(Any, config.conf)[ADDON_NAME]
+	try:
+		with open(_FILE, encoding="utf-8") as file:
+			data = json.load(file)
+	except FileNotFoundError:
+		return {}
+	except Exception:
+		log.error(f"Unable to read {_FILE}", exc_info=True)
+		return {}
+	return cast(dict[str, Any], data) if isinstance(data, dict) else {}
+
+
+def _save(**values: Any) -> None:
+	"""Save the given values with the other saved data of the add-on, an error is logged.
+	Nothing is saved on secure screens, where the configuration of NVDA must not be changed.
+	@param values: the names and the values to save
+	@type values: Any
+	"""
+	if cast(Any, appArgs).secure:
+		return
+	data = _load()
+	data.update(values)
+	try:
+		with open(_FILE, "w", encoding="utf-8") as file:
+			json.dump(data, file, ensure_ascii=False, indent="\t")
+	except Exception:
+		log.error(f"Unable to save {_FILE}", exc_info=True)
+
+
+def isCheckOnStartup() -> bool:
+	"""Whether the new duplicate gestures are searched for and shown after NVDA has started.
+	@return: True by default
+	@rtype: bool
+	"""
+	return bool(_load().get("checkOnStartup", True))
+
+
+def setCheckOnStartup(enabled: bool) -> None:
+	"""Turn on or off the search for new duplicate gestures after NVDA has started.
+	@param enabled: whether the search is turned on
+	@type enabled: bool
+	"""
+	_save(checkOnStartup=enabled)
+
+
+def getKnownDuplicates() -> set[str]:
+	"""The signatures of the duplicates that the user has seen.
+	@return: the signatures, empty if no duplicates have been seen yet
+	@rtype: set[str]
+	"""
+	known = _load().get("knownDuplicates", [])
+	return {str(item) for item in cast(list[Any], known)} if isinstance(known, list) else set()
 
 
 def rememberDuplicates(signatures: set[str]) -> None:
@@ -39,22 +87,5 @@ def rememberDuplicates(signatures: set[str]) -> None:
 	@param signatures: the signatures of the duplicates
 	@type signatures: set[str]
 	"""
-	if signatures != set(getAddonConfig()["knownDuplicates"]):
-		saveAddonConfig({"knownDuplicates": sorted(signatures)})
-
-
-def saveAddonConfig(options: dict[str, Any]) -> None:
-	"""Save the options of the add-on in the base configuration profile of NVDA,
-	so they apply whatever configuration profile is active.
-	@param options: the options of the add-on and their values
-	@type options: dict[str, Any]
-	"""
-	# The configuration profiles of NVDA have no type annotations
-	baseProfile = cast(Any, config.conf).profiles[0]
-	try:
-		baseProfile[ADDON_NAME].update(options)
-	except (KeyError, AttributeError):
-		baseProfile[ADDON_NAME] = options
-	# NVDA caches the values read through config.conf, and a change of a profile itself does not update the cache:
-	# the cached section of the add-on is dropped, so the new values apply at once
-	cast(Any, config.conf).rootSection._cache.pop(ADDON_NAME, None)
+	if signatures != getKnownDuplicates():
+		_save(knownDuplicates=sorted(signatures))

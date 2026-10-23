@@ -25,7 +25,7 @@ from inputCore import getDisplayTextForGestureIdentifier
 from logHandler import log
 
 from .base import DuplicateGroup, Duplicates, FilteredGestures, Gesture, getSignatures
-from .configuration import getAddonConfig, rememberDuplicates, saveAddonConfig
+from .configuration import isCheckOnStartup, rememberDuplicates, setCheckOnStartup
 
 try:
 	addonHandler.initTranslation()
@@ -317,7 +317,7 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 			# Translators: A check box in the window of duplicate gestures
 			wx.CheckBox(self, label=_("&Don't show this window on startup")),
 		)
-		self.noStartupCheck.SetValue(not getAddonConfig()["checkOnStartup"])
+		self.noStartupCheck.SetValue(not isCheckOnStartup())
 		self.noStartupCheck.Bind(wx.EVT_CHECKBOX, self.onNoStartupCheck)
 
 		sizer.Fit(self)
@@ -383,7 +383,7 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 		@param evt: event binder object that handles the change of the check box
 		@type evt: wx.CommandEvent
 		"""
-		saveAddonConfig({"checkOnStartup": not self.noStartupCheck.GetValue()})
+		setCheckOnStartup(not self.noStartupCheck.GetValue())
 
 	def onItemActivated(self, evt: wx.TreeEvent) -> None:
 		"""A double click on a gesture opens it, a double click on a branch expands or collapses it as usual.
