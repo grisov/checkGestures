@@ -3,7 +3,7 @@
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
-# Copyright (C) 2021-2026 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+# Copyright (C) 2021-2026 Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>
 
 # wxPython has incomplete type annotations and the GUI helpers of NVDA have none, so the types returned
 # by most GUI calls in this file are unknown to the type checker, and many wx methods return values
