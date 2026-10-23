@@ -9,9 +9,8 @@ without description and the selection of a gesture in the Input Gestures dialog.
 
 import types
 
-import wx
-
-from checkGesturesSupport import addon, events, log, module
+# wx is imported by the support package, which skips the tests where wxPython is not available
+from checkGesturesSupport import addon, events, log, module, wx
 from checkGesturesSupport.case import AddonTestCase
 
 graphui = module("graphui")
