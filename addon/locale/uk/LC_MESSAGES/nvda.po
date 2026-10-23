@@ -1,15 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Ukrainian translation of the Check Input Gestures add-on for NVDA.
+# Copyright (C) 2021-2026
+# This file is distributed under the same license as the 'checkGestures' package.
+# Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>, 2021.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 'checkGestures' '1.1.0'\n"
+"Project-Id-Version: 'checkGestures' '1.2.0'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2021-02-13 21:58+0200\n"
-"PO-Revision-Date: 2026-07-05 00:45+0200\n"
-"Last-Translator: Oleksandr Gryshchenko <grisov.nvaccess@mailnull.com>\n"
+"POT-Creation-Date: 2026-10-24 00:31+0200\n"
+"PO-Revision-Date: 2026-10-24 00:54+0200\n"
+"Last-Translator: Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>\n"
 "Language-Team: Ukrainian Language Team\n"
 "Language: uk_UA\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Poedit 3.10\n"
+
+#. Translators: Message that reports about the absence of the selected gesture in the Input Gestures dialog
+msgid "This gesture is not represented in the NVDA Input Gestures dialog."
+msgstr "Цей жест не відображається у діалоговому вікні Жести вводу NVDA."
+
+#. Translators: The title of the window that reports the lack of description of the selected gesture
+msgid "Gesture without description"
+msgstr "Жест без опису"
+
+#. Translators: Label above the list of found gestures
+#. Translators: Label in the window displaying duplicate gestures
+msgid "Select a gesture from the list"
+msgstr "Виберіть жест зі списку"
+
+#. Translators: The label for a first column in the list of gestures
+msgid "Gesture"
+msgstr "Жест"
+
+#. Translators: The label for the second column in the list of gestures
+msgid "Script description or function name"
+msgstr "Опис сценарію або назва функції"
+
+#. Translators: The label for the third column in the list of gestures
+msgid "Category"
+msgstr "Категорія"
+
+#. Translators: A check box in the window of duplicate gestures
+msgid "&Don't show this window on startup"
+msgstr "&Не показувати це вікно під час запуску"
 
 #. Translators: The title of the gestures list dialog and menu item
 msgid "Search for &duplicate gestures"
@@ -35,37 +64,24 @@ msgstr "До&відка"
 msgid "Target gestures not found"
 msgstr "Цільові жести вводу не знайдено"
 
-#. Translators: Label above the list of found gestures
-msgid "Select a gesture from the list"
-msgstr "Виберіть жест зі списку"
-
-#. Translators: The label for a first column in the list of gestures
-msgid "Gesture"
-msgstr "Жест"
-
-#. Translators: The label for the second column in the list of gestures
-msgid "Script description or function name"
-msgstr "Опис сценарію або назва функції"
-
-#. Translators: The label for the third column in the list of gestures
-msgid "Category"
-msgstr "Категорія"
-
-#. Translators: The message that reports about the absence of the selected gesture in the NVDA Input Gestures dialog
-msgid "This gesture is not represented in the NVDA Input Gestures dialog."
-msgstr "Цей жест не відображається у діалоговому вікні Жести вводу NVDA."
-
-#. Translators: The title of the window that reports the lack of description of the selected gesture
-msgid "Gesture without description"
-msgstr "Жест без опису"
-
-#. Add-on summary, usually the user visible name of the addon.
-#. Translators: Summary for this add-on
-#. to be shown on installation and add-on information found in Add-ons Manager.
+#. Add-on summary/title, usually the user visible name of the add-on
+#. Translators: Summary/title for this add-on
+#. to be shown on installation and add-on information found in add-on store
 msgid "Check Input Gestures"
 msgstr "Перевірка жестів вводу"
 
 #. Add-on description
-#. Translators: Long description to be shown for this add-on on add-on information from add-ons manager
+#. Translators: Long description to be shown for this add-on on add-on information from add-on store
 msgid "Find and fix input gestures conflicts in NVDA and add-ons."
 msgstr "Пошук та виправлення конфліктів жестів вводу в NVDA та додатках."
+
+#. Brief changelog for this version
+#. Translators: what's new content for the add-on version to be shown in the add-on store
+msgid ""
+"Duplicate gestures are shown as a tree and open in the Input Gestures dialog "
+"at the selected gesture, new duplicates are shown after NVDA has started, "
+"and the empty list in the window of duplicates has been fixed."
+msgstr ""
+"Жести, що дублюються, показуються у вигляді дерева і відкриваються в діалозі "
+"Жести вводу на вибраному жесті, нові дублікати показуються після запуску "
+"NVDA, а порожній список у вікні дублікатів виправлено."

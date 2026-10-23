@@ -3,10 +3,11 @@
 # A part of the NVDA Check Input Gestures add-on
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
-# Copyright (C) 2021-2026 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
+# Copyright (C) 2021-2026 Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>
 
 from collections.abc import Iterator
-from typing import override
+from dataclasses import dataclass
+from typing import Any, cast, override
 
 
 class Gesture:
@@ -35,6 +36,7 @@ class Gesture:
 		@param scriptName: the script name of the gesture-bound function
 		@type scriptName: str | None
 		"""
+		super().__init__()
 		self._gesture = gesture or ""
 		self._category = category or ""
 		self._displayName = displayName or ""
@@ -59,9 +61,26 @@ class Gesture:
 		return self._category
 
 	@property
+	def categoryLabel(self) -> str:
+		"""The category shown for the gesture: a gesture without a category is not shown in the Input Gestures dialog,
+		so the name of its module is shown in square brackets instead.
+		@return: the category or the module name in square brackets
+		@rtype: str
+		"""
+		return self._category or f"[{self._moduleName}]"
+
+	@property
+	def isUnsigned(self) -> bool:
+		"""Whether the gesture is not shown in the NVDA Input Gestures dialog, because its script has no description.
+		@return: whether the gesture has no category
+		@rtype: bool
+		"""
+		return not self._category
+
+	@property
 	def displayName(self) -> str:
 		"""Text description of the gesture-bound feature.
-		@return: text description of the function or empty stringn
+		@return: text description of the function or empty string
 		@rtype: str
 		"""
 		return self._displayName
@@ -90,6 +109,7 @@ class Gesture:
 		"""
 		return self._scriptName
 
+	@override
 	def __eq__(self, other: object) -> bool:
 		"""Comparison of objects for equality.
 		@param other: an object that represents another input gesture
@@ -106,6 +126,7 @@ class Gesture:
 			and self.scriptName == other.scriptName
 		)
 
+	@override
 	def __repr__(self) -> str:
 		"""Text presentation of input gesture object.
 		@return: text presentation
@@ -123,6 +144,7 @@ class Gestures:
 
 	def __init__(self) -> None:
 		"""Initialization of internal fields."""
+		super().__init__()
 		self._all: list[Gesture] = []
 
 	def __len__(self) -> int:
@@ -173,19 +195,29 @@ class Gestures:
 	def initialize(self) -> None:
 		"""Scan all input gestures used in NVDA.
 		Procedure for scanning input gestures:
-		1. Gestures binded to functions with text description (displayed in the "Input Gestures" dialog).
+		1. Gestures bound to functions with text description (displayed in the "Input Gestures" dialog).
 		2. Gestures related to functions without a text description.
 		"""
 		self.signed()
 		self.unsigned()
 
 	def signed(self) -> None:
-		"""Scan gestures binded to functions with text description
-		wich displayed in the "Input Gestures" dialog.
+		"""Scan gestures bound to functions with text description
+		which are displayed in the "Input Gestures" dialog.
 		"""
+		import gui
 		import inputCore
 
-		mapping = inputCore.manager.getAllGestureMappings()
+		# The input manager and the main frame of NVDA have incomplete type annotations
+		manager = cast(Any, inputCore).manager
+		mainFrame = cast(Any, gui.mainFrame)
+		# Like the NVDA Input Gestures dialog: while the NVDA menu or a dialog is open, the gestures of the program
+		# that had the focus before it are searched, otherwise the gestures of the program in focus
+		prevFocus = getattr(mainFrame, "prevFocus", None)
+		if prevFocus is not None:
+			mapping = manager.getAllGestureMappings(obj=prevFocus, ancestors=mainFrame.prevFocusAncestors)
+		else:
+			mapping = manager.getAllGestureMappings()
 		for category in list(mapping):
 			for script in mapping[category]:
 				obj = mapping[category][script]
@@ -201,12 +233,13 @@ class Gestures:
 					self.append(gesture)
 
 	def unsigned(self) -> None:
-		"""Scan gestures binded to functions without text description
-		wich not displayed in the "Input Gestures" dialog.
+		"""Scan gestures bound to functions without text description
+		which are not displayed in the "Input Gestures" dialog.
 		"""
 		import globalPluginHandler
 
-		for plugin in globalPluginHandler.runningPlugins:
+		# The global plugins of NVDA and their gesture maps have incomplete type annotations
+		for plugin in cast(Any, globalPluginHandler).runningPlugins:
 			for gest, obj in plugin._gestureMap.items():
 				if obj and not obj.__doc__:
 					gesture = Gesture(
@@ -255,8 +288,79 @@ class FilteredGestures:
 		raise NotImplementedError
 
 
+@dataclass
+class DuplicateGroup:
+	"""The gestures bound to the same keys in the current keyboard layout, i.e. one duplicate.
+	@ivar key: the identifier of the gesture without the current keyboard layout
+	@ivar gestures: the gestures of the duplicate
+	"""
+
+	key: str
+	gestures: list[Gesture]
+
+	def signatures(self) -> set[str]:
+		"""The signatures of the gestures of the duplicate, which do not depend on the language of NVDA:
+		the keys and the script of each gesture, so a script that has got the same keys makes a new duplicate.
+		@return: the signatures
+		@rtype: set[str]
+		"""
+		return {
+			f"{self.key} {gesture.moduleName}.{gesture.className}.{gesture.scriptName}"
+			for gesture in self.gestures
+		}
+
+	def categories(self) -> list[tuple[str, list[Gesture]]]:
+		"""The gestures of the duplicate grouped by their categories, both sorted by name.
+		@return: the category labels with their gestures
+		@rtype: list[tuple[str, list[Gesture]]]
+		"""
+		categories: dict[str, list[Gesture]] = {}
+		for gesture in self.gestures:
+			categories.setdefault(gesture.categoryLabel, []).append(gesture)
+		return [
+			(category, sorted(gestures, key=lambda item: (item.displayName or item.scriptName).casefold()))
+			for category, gestures in sorted(categories.items(), key=lambda item: item[0].casefold())
+		]
+
+
+def getSignatures(groups: list[DuplicateGroup]) -> set[str]:
+	"""Get the signatures of all gestures of the duplicates.
+	@param groups: the duplicates
+	@type groups: list[DuplicateGroup]
+	@return: the signatures
+	@rtype: set[str]
+	"""
+	signatures: set[str] = set()
+	for group in groups:
+		signatures.update(group.signatures())
+	return signatures
+
+
+def getLayoutSuffix() -> str:
+	"""The current keyboard layout as it is written in the identifiers of the gestures, e.g. "(laptop)".
+	@return: the layout in parentheses
+	@rtype: str
+	"""
+	import config
+
+	# The configuration of NVDA has no type annotations
+	return "(%s)" % cast(Any, config.conf)["keyboard"]["keyboardLayout"]
+
+
 class Duplicates(FilteredGestures):
 	"""Collection of duplicate input gestures."""
+
+	def groups(self) -> list[DuplicateGroup]:
+		"""The duplicates: the gestures grouped by their keys in the current keyboard layout,
+		so a gesture for all layouts and the same gesture for the current layout are in one group.
+		@return: the groups of the duplicate gestures, sorted by the identifiers of the gestures
+		@rtype: list[DuplicateGroup]
+		"""
+		layout = getLayoutSuffix()
+		groups: dict[str, list[Gesture]] = {}
+		for gesture in self:
+			groups.setdefault(gesture.gesture.replace(layout, ""), []).append(gesture)
+		return [DuplicateGroup(key, gestures) for key, gestures in sorted(groups.items())]
 
 	@override
 	def __iter__(self) -> Iterator[Gesture]:
@@ -264,23 +368,19 @@ class Duplicates(FilteredGestures):
 		@return: iterator of the duplicated input gestures
 		@rtype: Iterator[Gesture]
 		"""
-		import config
-
 		gestures = Gestures()
 		gestures.initialize()
-		collection = [
-			gt.gesture.replace("(%s)" % config.conf["keyboard"]["keyboardLayout"], "") for gt in gestures
-		]
+		# The current keyboard layout is removed from the gestures, so a gesture for all layouts
+		# and the same gesture for the current layout are compared as the same keys
+		layout = getLayoutSuffix()
+		collection = [gt.gesture.replace(layout, "") for gt in gestures]
 		for gest in gestures:
-			if (
-				collection.count(gest.gesture.replace("(%s)" % config.conf["keyboard"]["keyboardLayout"], ""))
-				> 1
-			):
+			if collection.count(gest.gesture.replace(layout, "")) > 1:
 				yield gest
 
 
 class Unsigned(FilteredGestures):
-	"""Collection of input gestures binded to functions without a text description."""
+	"""Collection of input gestures bound to functions without a text description."""
 
 	@override
 	def __iter__(self) -> Iterator[Gesture]:

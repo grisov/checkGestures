@@ -10,7 +10,6 @@ from site_scons.site_tools.NVDATool.typings import AddonInfo, BrailleTables, Sym
 # which returns whatever is given to it as an argument.
 from site_scons.site_tools.NVDATool.utils import _
 
-
 # Add-on information variables
 addon_info = AddonInfo(
 	# add-on Name/identifier, internal for NVDA
@@ -23,10 +22,10 @@ addon_info = AddonInfo(
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
 	addon_description=_("""Find and fix input gestures conflicts in NVDA and add-ons."""),
 	# version
-	addon_version="1.1.0",
+	addon_version="1.2.0",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
-	addon_changelog=_("""The add-on has been tested for compatibility with NVDA 2026.1."""),
+	addon_changelog=_("""Duplicate gestures are shown as a tree and open in the Input Gestures dialog at the selected gesture, new duplicates are shown after NVDA has started, and the empty list in the window of duplicates has been fixed."""),
 	# Author(s)
 	addon_author="Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>",
 	# URL for the add-on documentation support
