@@ -98,6 +98,11 @@ class TestSearchOnStartup(AddonTestCase):
 		self.startNvda()
 		self.assertEqual(configuration.getKnownDuplicates(), {"kb:NVDA+q appModules.explorer.AppModule.script"})
 
+	def test_resolved_global_duplicates_are_forgotten(self):
+		configuration.rememberDuplicates({"kb:NVDA+q globalCommands.GlobalCommands.old"})
+		self.startNvda()
+		self.assertEqual(configuration.getKnownDuplicates(), set())
+
 	def test_duplicates_of_different_programs_in_focus_are_not_shown_again(self):
 		# The duplicates found when NVDA starts depend on the program in focus
 		self.addScript("Explorer", "Rename", "kb:NVDA+q", moduleName="appModules.explorer", className="AppModule")

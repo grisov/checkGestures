@@ -18,7 +18,7 @@ from logHandler import log
 from scriptHandler import script
 
 from . import base
-from .configuration import ADDON_SUMMARY, getKnownDuplicates, isCheckOnStartup
+from .configuration import ADDON_SUMMARY, getKnownDuplicates, isCheckOnStartup, updateKnownDuplicates
 from .graphui import DuplicatedGesturesDialog, UnsignedGesturesDialog
 
 try:
@@ -97,7 +97,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not isCheckOnStartup():
 			return
 		duplicates = Duplicates()
-		if base.getSignatures(duplicates.groups()) - getKnownDuplicates():
+		signatures = base.getSignatures(duplicates.groups())
+		updateKnownDuplicates(signatures)
+		if signatures - getKnownDuplicates():
 			self.showGestures(duplicates)
 
 	def checkGestures(self, gestures: base.FilteredGestures) -> None:

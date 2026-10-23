@@ -25,7 +25,7 @@ from inputCore import getDisplayTextForGestureIdentifier
 from logHandler import log
 
 from .base import DuplicateGroup, Duplicates, FilteredGestures, Gesture, getSignatures
-from .configuration import isCheckOnStartup, rememberDuplicates, setCheckOnStartup
+from .configuration import isCheckOnStartup, rememberDuplicates, setCheckOnStartup, updateKnownDuplicates
 
 try:
 	addonHandler.initTranslation()
@@ -344,6 +344,7 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 		groups = self.gestures.groups() if isinstance(self.gestures, Duplicates) else []
 		# The duplicates shown in the window, remembered when it is closed with OK
 		self._groups = groups
+		updateKnownDuplicates(getSignatures(groups))
 		for group in sorted(groups, key=lambda item: getDuplicateDisplayText(item).casefold()):
 			groupItem = tree.AppendItem(root, getDuplicateDisplayText(group))
 			# The layout of each script is shown only if the duplicate mixes several layouts
