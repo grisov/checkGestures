@@ -6,6 +6,7 @@
 # Copyright (C) 2021-2026 Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>
 
 from collections.abc import Iterator
+from dataclasses import dataclass
 from typing import Any, cast, override
 
 
@@ -58,6 +59,23 @@ class Gesture:
 		@rtype: str
 		"""
 		return self._category
+
+	@property
+	def categoryLabel(self) -> str:
+		"""The category shown for the gesture: a gesture without a category is not shown in the Input Gestures dialog,
+		so the name of its module is shown in square brackets instead.
+		@return: the category or the module name in square brackets
+		@rtype: str
+		"""
+		return self._category or f"[{self._moduleName}]"
+
+	@property
+	def isUnsigned(self) -> bool:
+		"""Whether the gesture is not shown in the NVDA Input Gestures dialog, because its script has no description.
+		@return: whether the gesture has no category
+		@rtype: bool
+		"""
+		return not self._category
 
 	@property
 	def displayName(self) -> str:
@@ -261,8 +279,55 @@ class FilteredGestures:
 		raise NotImplementedError
 
 
+@dataclass
+class DuplicateGroup:
+	"""The gestures bound to the same keys in the current keyboard layout, i.e. one duplicate.
+	@ivar key: the identifier of the gesture without the current keyboard layout
+	@ivar gestures: the gestures of the duplicate
+	"""
+
+	key: str
+	gestures: list[Gesture]
+
+	def categories(self) -> list[tuple[str, list[Gesture]]]:
+		"""The gestures of the duplicate grouped by their categories, both sorted by name.
+		@return: the category labels with their gestures
+		@rtype: list[tuple[str, list[Gesture]]]
+		"""
+		categories: dict[str, list[Gesture]] = {}
+		for gesture in self.gestures:
+			categories.setdefault(gesture.categoryLabel, []).append(gesture)
+		return [
+			(category, sorted(gestures, key=lambda item: (item.displayName or item.scriptName).casefold()))
+			for category, gestures in sorted(categories.items(), key=lambda item: item[0].casefold())
+		]
+
+
+def getLayoutSuffix() -> str:
+	"""The current keyboard layout as it is written in the identifiers of the gestures, e.g. "(laptop)".
+	@return: the layout in parentheses
+	@rtype: str
+	"""
+	import config
+
+	# The configuration of NVDA has no type annotations
+	return "(%s)" % cast(Any, config.conf)["keyboard"]["keyboardLayout"]
+
+
 class Duplicates(FilteredGestures):
 	"""Collection of duplicate input gestures."""
+
+	def groups(self) -> list[DuplicateGroup]:
+		"""The duplicates: the gestures grouped by their keys in the current keyboard layout,
+		so a gesture for all layouts and the same gesture for the current layout are in one group.
+		@return: the groups of the duplicate gestures, sorted by the identifiers of the gestures
+		@rtype: list[DuplicateGroup]
+		"""
+		layout = getLayoutSuffix()
+		groups: dict[str, list[Gesture]] = {}
+		for gesture in self:
+			groups.setdefault(gesture.gesture.replace(layout, ""), []).append(gesture)
+		return [DuplicateGroup(key, gestures) for key, gestures in sorted(groups.items())]
 
 	@override
 	def __iter__(self) -> Iterator[Gesture]:
@@ -270,13 +335,11 @@ class Duplicates(FilteredGestures):
 		@return: iterator of the duplicated input gestures
 		@rtype: Iterator[Gesture]
 		"""
-		import config
-
 		gestures = Gestures()
 		gestures.initialize()
-		# The keyboard layout is removed from the gestures, so the same keys are compared in any layout;
-		# the configuration of NVDA has no type annotations
-		layout = "(%s)" % cast(Any, config.conf)["keyboard"]["keyboardLayout"]
+		# The current keyboard layout is removed from the gestures, so a gesture for all layouts
+		# and the same gesture for the current layout are compared as the same keys
+		layout = getLayoutSuffix()
 		collection = [gt.gesture.replace(layout, "") for gt in gestures]
 		for gest in gestures:
 			if collection.count(gest.gesture.replace(layout, "")) > 1:

@@ -24,7 +24,7 @@ from gui.settingsDialogs import SettingsDialog
 from inputCore import getDisplayTextForGestureIdentifier
 from logHandler import log
 
-from .base import FilteredGestures
+from .base import DuplicateGroup, Duplicates, FilteredGestures, Gesture
 
 try:
 	addonHandler.initTranslation()
@@ -42,6 +42,29 @@ def getGestureDisplayText(identifier: str) -> str:
 	"""
 	source, keys = getDisplayTextForGestureIdentifier(identifier)
 	return f"{keys} ({source})"
+
+
+def getGestureSource(identifier: str) -> str:
+	"""Get the source of the input gesture as NVDA shows it, e.g. "keyboard, all layouts".
+	@param identifier: the identifier of the input gesture
+	@type identifier: str
+	@return: the source of the gesture
+	@rtype: str
+	"""
+	return getDisplayTextForGestureIdentifier(identifier)[0]
+
+
+def getDuplicateDisplayText(group: DuplicateGroup) -> str:
+	"""Get the text of the keys of a duplicate with the sources of its gestures, e.g. "NVDA+F1 (keyboard, all layouts)".
+	A duplicate can mix the gestures for all keyboard layouts and for the current one, then both sources are shown.
+	@param group: the duplicate
+	@type group: DuplicateGroup
+	@return: the text of the duplicate
+	@rtype: str
+	"""
+	keys = getDisplayTextForGestureIdentifier(group.key)[1]
+	sources = sorted({getGestureSource(gesture.gesture) for gesture in group.gestures})
+	return f"{keys} ({'; '.join(sources)})"
 
 
 class InputGesturesDialogWithSearch(InputGesturesDialog):
@@ -66,9 +89,6 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 	@type title: str
 	"""
 
-	# The list of the gestures, created by the child classes in makeSettings
-	gesturesList: AutoWidthColumnListCtrl
-
 	def __init__(
 		self,
 		parent: wx.Window,
@@ -90,18 +110,10 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 		super().__init__(parent, *args, **kwargs)
 
 	@abstractmethod
-	def isUnsignedInFocus(self) -> bool:
-		"""Check that the selected gesture is not presented in the Input Gestures dialog.
-		@return: an indication of whether the selected gesture is not presented in the Input gestures dialog
-		@rtype: bool
-		"""
-		raise NotImplementedError("This method must be overridden in the child class!")
-
-	@abstractmethod
-	def scriptNameInFocus(self) -> str:
-		"""Extract script name from the item in focus.
-		@return: the name of the script that binded to gesture
-		@rtype: str
+	def gestureInFocus(self) -> Gesture | None:
+		"""The gesture of the item in focus.
+		@return: the gesture, None if the item in focus is not a gesture, e.g. a branch of the tree
+		@rtype: Gesture | None
 		"""
 		raise NotImplementedError("This method must be overridden in the child class!")
 
@@ -110,7 +122,8 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 		@return: an indication of whether the selected gesture is not presented in the Input gestures dialog
 		@rtype: bool
 		"""
-		isUnsigned = self.isUnsignedInFocus()
+		gesture = self.gestureInFocus()
+		isUnsigned = gesture is not None and gesture.isUnsigned
 		if isUnsigned:
 			gui.messageBox(
 				# Translators: Message that reports about the absence of the selected gesture in the Input Gestures dialog
@@ -135,29 +148,30 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 		evt.Skip()
 
 	@override
-	def postInit(self) -> None:
-		"""Called after the dialog has been created."""
-		self.gesturesList.SetFocus()
-
-	@override
 	def onOk(self, evt: wx.CommandEvent) -> None:
-		"""Overridden method that is executed when the Ok button is activated.
+		"""Overridden method that is executed when the Ok button is activated:
+		the gesture in focus is shown in the Input Gestures dialog.
 		@param evt: event binder object that handles the activation of the OK button
 		@type evt: wx.CommandEvent
 		"""
+		gesture = self.gestureInFocus()
+		if self.unsignedGestureWarning():
+			return
 		evt.Skip()
 		self.Destroy()
-		if self.unsignedGestureWarning():
+		if gesture is None:
 			return
 		# gui.mainFrame is None only until the GUI of NVDA has been initialized
 		cast(Any, gui.mainFrame).popupSettingsDialog(
 			InputGesturesDialogWithSearch,
-			search=self.scriptNameInFocus(),
+			search=gesture.displayName or gesture.scriptName,
 		)
 
 
 class UnsignedGesturesDialog(BaseGesturesDialog):
 	"""Dialog window to display a collection of unsigned input gestures."""
+
+	gesturesList: AutoWidthColumnListCtrl
 
 	@override
 	def makeSettings(self, sizer: wx.Sizer) -> None:
@@ -184,13 +198,14 @@ class UnsignedGesturesDialog(BaseGesturesDialog):
 		sizer.Fit(self)
 		self.Center(wx.BOTH | wx.Center)
 
-		# Fill in the list of available input gestures
-		for gesture in sorted(self.gestures, key=lambda x: x.gesture):
+		# Fill in the list of available input gestures, in the order kept for gestureInFocus
+		self._listedGestures = sorted(self.gestures, key=lambda x: x.gesture)
+		for gesture in self._listedGestures:
 			self.gesturesList.Append(
 				(
 					getGestureDisplayText(gesture.gesture),
 					gesture.displayName or gesture.scriptName,
-					gesture.category or f"[{gesture.moduleName}]",
+					gesture.categoryLabel,
 				),
 			)
 		self.gesturesList.SetFocus()
@@ -198,25 +213,26 @@ class UnsignedGesturesDialog(BaseGesturesDialog):
 		self.gesturesList.Select(0)
 
 	@override
-	def isUnsignedInFocus(self) -> bool:
-		"""Check that the selected gesture is not presented in the Input Gestures dialog.
-		@return: an indication of whether the selected gesture is not presented in the Input gestures dialog
-		@rtype: bool
-		"""
-		category: str = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
-		return category.startswith("[") and category.endswith("]")
+	def postInit(self) -> None:
+		"""Called after the dialog has been created."""
+		self.gesturesList.SetFocus()
 
 	@override
-	def scriptNameInFocus(self) -> str:
-		"""Extract script name from the item in focus.
-		@return: the name of the script that binded to gesture
-		@rtype: str
+	def gestureInFocus(self) -> Gesture | None:
+		"""The gesture of the item in focus.
+		@return: the gesture, None if no item is in focus
+		@rtype: Gesture | None
 		"""
-		return self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1)
+		index: int = self.gesturesList.GetFocusedItem()
+		return self._listedGestures[index] if 0 <= index < len(self._listedGestures) else None
 
 
 class DuplicatedGesturesDialog(BaseGesturesDialog):
-	"""Dialog window to display a collection of duplicated input gestures."""
+	"""Dialog window to display the duplicated input gestures as a tree:
+	the keys of each duplicate with their keyboard layouts, then the categories, then the scripts.
+	"""
+
+	gesturesTree: wx.TreeCtrl
 
 	@override
 	def makeSettings(self, sizer: wx.Sizer) -> None:
@@ -225,50 +241,70 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 		@type sizer: wx.Sizer
 		"""
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=sizer)
-		self.gesturesList = sHelper.addLabeledControl(
+		self.gesturesTree = tree = sHelper.addLabeledControl(
 			# Translators: Label in the window displaying duplicate gestures
 			_("Select a gesture from the list"),
-			AutoWidthColumnListCtrl,
-			autoSizeColumn=1,  # The replacement column is likely to need the most space
-			itemTextCallable=None,
-			style=wx.LC_REPORT | wx.LC_SINGLE_SEL,
+			wx.TreeCtrl,
+			size=wx.Size(600, 400),
+			style=wx.TR_HAS_BUTTONS | wx.TR_HIDE_ROOT | wx.TR_LINES_AT_ROOT | wx.TR_SINGLE,
 		)
-		# Translators: The label for a first column in the list of gestures
-		self.gesturesList.InsertColumn(0, _("Gesture"), width=150)
-		# Translators: The label for the second column in the list of gestures
-		self.gesturesList.InsertColumn(1, _("Script description or function name"))
-		# Translators: The label for the third column in the list of gestures
-		self.gesturesList.InsertColumn(2, _("Category"), width=150)
+		tree.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.onItemActivated)
 
 		sizer.Fit(self)
 		self.Center(wx.BOTH | wx.Center)
 
-		# Fill in the list of available input gestures
-		for gesture in sorted(self.gestures, key=lambda x: x.gesture):
-			self.gesturesList.Append(
-				(
-					getGestureDisplayText(gesture.gesture),
-					gesture.displayName or gesture.scriptName,
-					gesture.category or f"[{gesture.moduleName}]",
-				),
-			)
-		self.gesturesList.SetFocus()
-		self.gesturesList.Focus(0)
-		self.gesturesList.Select(0)
+		# Fill in the tree, all branches are collapsed
+		root = tree.AddRoot("")
+		groups = self.gestures.groups() if isinstance(self.gestures, Duplicates) else []
+		for group in sorted(groups, key=lambda item: getDuplicateDisplayText(item).casefold()):
+			groupItem = tree.AppendItem(root, getDuplicateDisplayText(group))
+			# The layout of each script is shown only if the duplicate mixes several layouts
+			isMixed = len({getGestureSource(gesture.gesture) for gesture in group.gestures}) > 1
+			for category, gestures in group.categories():
+				categoryItem = tree.AppendItem(groupItem, category)
+				for gesture in gestures:
+					label = gesture.displayName or gesture.scriptName
+					if isMixed:
+						label = f"{label} ({getGestureSource(gesture.gesture)})"
+					tree.AppendItem(categoryItem, label, data=gesture)
+		first, _cookie = tree.GetFirstChild(root)
+		if first.IsOk():
+			tree.SelectItem(first)
 
 	@override
-	def isUnsignedInFocus(self) -> bool:
-		"""Check that the selected gesture is not presented in the Input Gestures dialog.
-		@return: an indication of whether the selected gesture is not presented in the Input gestures dialog
-		@rtype: bool
-		"""
-		category: str = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
-		return category.startswith("[") and category.endswith("]")
+	def postInit(self) -> None:
+		"""Called after the dialog has been created."""
+		self.gesturesTree.SetFocus()
 
 	@override
-	def scriptNameInFocus(self) -> str:
-		"""Extract script name from the item in focus.
-		@return: the name of the script that binded to gesture
-		@rtype: str
+	def gestureInFocus(self) -> Gesture | None:
+		"""The gesture of the item in focus.
+		@return: the gesture, None if the item in focus is a branch of the tree
+		@rtype: Gesture | None
 		"""
-		return self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 1)
+		item = self.gesturesTree.GetFocusedItem()
+		data = self.gesturesTree.GetItemData(item) if item.IsOk() else None
+		return data if isinstance(data, Gesture) else None
+
+	@override
+	def _enterActivatesOk_ctrlSActivatesApply(self, evt: wx.PyEvent) -> None:
+		"""Enter on a branch of the tree expands or collapses it, Enter on a gesture opens it.
+		@param evt: event binder object that handles keystrokes
+		@type evt: wx.PyEvent
+		"""
+		if evt.KeyCode in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER) and self.gestureInFocus() is None:
+			item = self.gesturesTree.GetFocusedItem()
+			if item.IsOk():
+				self.gesturesTree.Toggle(item)
+			return
+		super()._enterActivatesOk_ctrlSActivatesApply(evt)
+
+	def onItemActivated(self, evt: wx.TreeEvent) -> None:
+		"""A double click on a gesture opens it, a double click on a branch expands or collapses it as usual.
+		@param evt: event binder object that handles the activation of an item of the tree
+		@type evt: wx.TreeEvent
+		"""
+		if self.gestureInFocus() is None:
+			evt.Skip()
+			return
+		self.ProcessEvent(wx.CommandEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, wx.ID_OK))
