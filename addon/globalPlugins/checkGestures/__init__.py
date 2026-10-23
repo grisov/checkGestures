@@ -4,13 +4,13 @@
 # Copyright (C) 2021-2026 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
 from collections.abc import Callable
-from typing import override
+from typing import Any, cast, override
 
 import addonHandler
 import config
 import globalPluginHandler
 import gui
-import wx  # type: ignore
+import wx
 from globalVars import appArgs
 from inputCore import InputGesture
 from logHandler import log
@@ -25,7 +25,8 @@ except addonHandler.AddonError:
 	log.warning("Unable to init translations. This may be because the addon is running from NVDA scratchpad.")
 _: Callable[[str], str]
 
-_addon = addonHandler.getCodeAddon()
+# The manifest of the add-on has no type annotations
+_addon = cast(Any, addonHandler).getCodeAddon()
 ADDON_NAME: str = _addon.manifest["name"]
 ADDON_SUMMARY: str = _addon.manifest["summary"]
 
@@ -46,31 +47,34 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory: str = ADDON_SUMMARY
 
 	@override
-	def __init__(self, *args, **kwargs) -> None:
+	def __init__(self, *args: Any, **kwargs: Any) -> None:
 		"""Initialization of the add-on global plugin."""
-		super(GlobalPlugin, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		if appArgs.secure or config.isAppX:
 			return
 		self.createMenu()
 
 	def createMenu(self) -> None:
 		"""Build a submenu in the NVDA "tools" menu."""
-		self.menu: wx.Menu = gui.mainFrame.sysTrayIcon.toolsMenu
+		# gui.mainFrame is None only until the GUI of NVDA has been initialized, before the plugins are loaded,
+		# and wx.EvtHandler.Bind has incomplete type annotations
+		sysTrayIcon = cast(Any, gui.mainFrame).sysTrayIcon
+		self.menu: wx.Menu = sysTrayIcon.toolsMenu
 		subMenu = wx.Menu()
 		self.mainItem: wx.MenuItem = self.menu.AppendSubMenu(subMenu, ADDON_SUMMARY)
 		checkDuplicatesItem: wx.MenuItem = subMenu.Append(wx.ID_ANY, Duplicates().menuItem)
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckDuplicates, checkDuplicatesItem)
+		sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckDuplicates, checkDuplicatesItem)
 		checkUnsignedItem: wx.MenuItem = subMenu.Append(wx.ID_ANY, Unsigned().menuItem)
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckUnsigned, checkUnsignedItem)
+		sysTrayIcon.Bind(wx.EVT_MENU, self.onCheckUnsigned, checkUnsignedItem)
 		# Translators: the name of a submenu item
 		helpItem: wx.MenuItem = subMenu.Append(wx.ID_ANY, _("&Help"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onHelp, helpItem)
+		sysTrayIcon.Bind(wx.EVT_MENU, self.onHelp, helpItem)
 
 	@override
 	def terminate(self) -> None:
 		"""This will be called when NVDA is finished with this global plugin"""
 		try:
-			self.menu.Remove(self.mainItem)
+			_ = self.menu.Remove(self.mainItem)
 		except (RuntimeError, AttributeError):
 			pass
 		super().terminate()
@@ -85,9 +89,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			GesturesDialog = (
 				DuplicatedGesturesDialog if isinstance(gestures, Duplicates) else UnsignedGesturesDialog
 			)
-			gui.mainFrame.popupSettingsDialog(GesturesDialog, title=gestures.title, gestures=gestures)
+			# gui.mainFrame is None only until the GUI of NVDA has been initialized
+			cast(Any, gui.mainFrame).popupSettingsDialog(
+				GesturesDialog,
+				title=gestures.title,
+				gestures=gestures,
+			)
 		else:
-			gui.messageBox(
+			# The pressed button is not needed; "_" cannot take the result, it translates the message below
+			gui.messageBox(  # pyright: ignore[reportUnusedCallResult]
 				# Translators: Notification of no search results
 				message=_("Target gestures not found"),
 				caption=gestures.title,
@@ -95,28 +105,28 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				parent=gui.mainFrame,
 			)
 
-	def onCheckDuplicates(self, event: wx.PyEvent) -> None:
+	def onCheckDuplicates(self, event: wx.PyEvent | None) -> None:
 		"""Show the collection of duplicate gestures in separate window.
 		@param event: event binder object that specifies the activation of wx.Menu item
-		@type event: wx.PyEvent
+		@type event: wx.PyEvent | None
 		"""
 		self.checkGestures(Duplicates())
 
-	def onCheckUnsigned(self, event: wx.PyEvent) -> None:
+	def onCheckUnsigned(self, event: wx.PyEvent | None) -> None:
 		"""Show the collection of gestures wich binded to features without description in separate window.
 		@param event: event binder object that specifies the activation of wx.Menu item
-		@type event: wx.PyEvent
+		@type event: wx.PyEvent | None
 		"""
 		self.checkGestures(Unsigned())
 
-	def onHelp(self, event: wx.PyEvent) -> None:
+	def onHelp(self, event: wx.PyEvent | None) -> None:
 		"""Open the add-on help page in the default browser.
 		@param event: event binder object that specifies the activation of wx.Menu item
-		@type event: wx.PyEvent
+		@type event: wx.PyEvent | None
 		"""
 		import webbrowser
 
-		webbrowser.open(_addon.getDocFilePath())
+		_ = webbrowser.open(_addon.getDocFilePath())
 
 	@script(description=Duplicates().title)
 	def script_duplicates(self, gesture: InputGesture) -> None:

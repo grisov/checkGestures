@@ -6,7 +6,7 @@
 # Copyright (C) 2021-2026 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
 from collections.abc import Iterator
-from typing import override
+from typing import Any, cast, override
 
 
 class Gesture:
@@ -35,6 +35,7 @@ class Gesture:
 		@param scriptName: the script name of the gesture-bound function
 		@type scriptName: str | None
 		"""
+		super().__init__()
 		self._gesture = gesture or ""
 		self._category = category or ""
 		self._displayName = displayName or ""
@@ -90,6 +91,7 @@ class Gesture:
 		"""
 		return self._scriptName
 
+	@override
 	def __eq__(self, other: object) -> bool:
 		"""Comparison of objects for equality.
 		@param other: an object that represents another input gesture
@@ -106,6 +108,7 @@ class Gesture:
 			and self.scriptName == other.scriptName
 		)
 
+	@override
 	def __repr__(self) -> str:
 		"""Text presentation of input gesture object.
 		@return: text presentation
@@ -123,6 +126,7 @@ class Gestures:
 
 	def __init__(self) -> None:
 		"""Initialization of internal fields."""
+		super().__init__()
 		self._all: list[Gesture] = []
 
 	def __len__(self) -> int:
@@ -185,7 +189,8 @@ class Gestures:
 		"""
 		import inputCore
 
-		mapping = inputCore.manager.getAllGestureMappings()
+		# The input manager of NVDA has incomplete type annotations
+		mapping = cast(Any, inputCore).manager.getAllGestureMappings()
 		for category in list(mapping):
 			for script in mapping[category]:
 				obj = mapping[category][script]
@@ -206,7 +211,8 @@ class Gestures:
 		"""
 		import globalPluginHandler
 
-		for plugin in globalPluginHandler.runningPlugins:
+		# The global plugins of NVDA and their gesture maps have incomplete type annotations
+		for plugin in cast(Any, globalPluginHandler).runningPlugins:
 			for gest, obj in plugin._gestureMap.items():
 				if obj and not obj.__doc__:
 					gesture = Gesture(
@@ -268,14 +274,12 @@ class Duplicates(FilteredGestures):
 
 		gestures = Gestures()
 		gestures.initialize()
-		collection = [
-			gt.gesture.replace("(%s)" % config.conf["keyboard"]["keyboardLayout"], "") for gt in gestures
-		]
+		# The keyboard layout is removed from the gestures, so the same keys are compared in any layout;
+		# the configuration of NVDA has no type annotations
+		layout = "(%s)" % cast(Any, config.conf)["keyboard"]["keyboardLayout"]
+		collection = [gt.gesture.replace(layout, "") for gt in gestures]
 		for gest in gestures:
-			if (
-				collection.count(gest.gesture.replace("(%s)" % config.conf["keyboard"]["keyboardLayout"], ""))
-				> 1
-			):
+			if collection.count(gest.gesture.replace(layout, "")) > 1:
 				yield gest
 
 

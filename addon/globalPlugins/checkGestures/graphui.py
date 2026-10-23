@@ -5,13 +5,19 @@
 # See the file COPYING for more details.
 # Copyright (C) 2021-2026 Olexandr Gryshchenko <grisov.nvaccess@mailnull.com>
 
+# wxPython has incomplete type annotations and the GUI helpers of NVDA have none, so the types returned
+# by most GUI calls in this file are unknown to the type checker, and many wx methods return values
+# that are not needed here (e.g. whether a control has been focused). Only these rules are relaxed for this file.
+# pyright: reportUnknownMemberType=false, reportUnknownArgumentType=false, reportUnknownVariableType=false
+# pyright: reportUnusedCallResult=false
+
 from abc import ABCMeta, abstractmethod
 from collections.abc import Callable
-from typing import override
+from typing import Any, cast, override
 
 import addonHandler
 import gui
-import wx  # type: ignore
+import wx
 from gui.inputGestures import InputGesturesDialog
 from gui.nvdaControls import AutoWidthColumnListCtrl
 from gui.settingsDialogs import SettingsDialog
@@ -27,17 +33,29 @@ except addonHandler.AddonError:
 _: Callable[[str], str]
 
 
+def getGestureDisplayText(identifier: str) -> str:
+	"""Get the text of the input gesture as NVDA shows it, with its source, e.g. "NVDA+F1 (keyboard)".
+	@param identifier: the identifier of the input gesture
+	@type identifier: str
+	@return: the text of the gesture
+	@rtype: str
+	"""
+	source, keys = getDisplayTextForGestureIdentifier(identifier)
+	return f"{keys} ({source})"
+
+
 class InputGesturesDialogWithSearch(InputGesturesDialog):
 	"""Overridden standard NVDA Input Gestures dialog with search at initialization."""
 
-	def __init__(self, parent: wx.Window, search: str = "", *args, **kwargs) -> None:
+	def __init__(self, parent: wx.Window, search: str = "", *args: Any, **kwargs: Any) -> None:
 		"""Initialization of the Input Gestures dialog with a search query.
 		@param parent: The parent for this dialog.
 		@type parent: wx.Window
 		@param search: Search query.
 		@type search: str
 		"""
-		super(InputGesturesDialogWithSearch, self).__init__(parent, *args, **kwargs)
+		# SettingsDialog works with any parent window, NVDA annotates it as a dialog
+		super().__init__(parent, *args, **kwargs)  # pyright: ignore[reportArgumentType]
 		if search:
 			self.filterCtrl.SetValue(search)
 
@@ -48,7 +66,17 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 	@type title: str
 	"""
 
-	def __init__(self, parent: wx.Window, title: str, gestures: FilteredGestures, *args, **kwargs) -> None:
+	# The list of the gestures, created by the child classes in makeSettings
+	gesturesList: AutoWidthColumnListCtrl
+
+	def __init__(
+		self,
+		parent: wx.Window,
+		title: str,
+		gestures: FilteredGestures,
+		*args: Any,
+		**kwargs: Any,
+	) -> None:
 		"""Initialization of the graphical dialog.
 		@param parent: The parent window for this dialog
 		@type parent: wx.Window
@@ -59,7 +87,7 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 		"""
 		self.title = title
 		self.gestures = gestures
-		super(BaseGesturesDialog, self).__init__(parent, *args, **kwargs)
+		super().__init__(parent, *args, **kwargs)
 
 	@abstractmethod
 	def isUnsignedInFocus(self) -> bool:
@@ -112,16 +140,20 @@ class BaseGesturesDialog(SettingsDialog, metaclass=ABCMeta):
 		self.gesturesList.SetFocus()
 
 	@override
-	def onOk(self, evt: wx.PyEvent) -> None:
+	def onOk(self, evt: wx.CommandEvent) -> None:
 		"""Overridden method that is executed when the Ok button is activated.
 		@param evt: event binder object that handles the activation of the OK button
-		@type evt: wx.PyEvent
+		@type evt: wx.CommandEvent
 		"""
 		evt.Skip()
 		self.Destroy()
 		if self.unsignedGestureWarning():
 			return
-		gui.mainFrame.popupSettingsDialog(InputGesturesDialogWithSearch, search=self.scriptNameInFocus())
+		# gui.mainFrame is None only until the GUI of NVDA has been initialized
+		cast(Any, gui.mainFrame).popupSettingsDialog(
+			InputGesturesDialogWithSearch,
+			search=self.scriptNameInFocus(),
+		)
 
 
 class UnsignedGesturesDialog(BaseGesturesDialog):
@@ -153,11 +185,10 @@ class UnsignedGesturesDialog(BaseGesturesDialog):
 		self.Center(wx.BOTH | wx.Center)
 
 		# Fill in the list of available input gestures
-		gestureDisplayText = lambda gest: "{1} ({0})".format(*getDisplayTextForGestureIdentifier(gest))  # noqa E731 do not assign a lambda expression, use a def
 		for gesture in sorted(self.gestures, key=lambda x: x.gesture):
 			self.gesturesList.Append(
 				(
-					gestureDisplayText(gesture.gesture),
+					getGestureDisplayText(gesture.gesture),
 					gesture.displayName or gesture.scriptName,
 					gesture.category or f"[{gesture.moduleName}]",
 				),
@@ -166,6 +197,7 @@ class UnsignedGesturesDialog(BaseGesturesDialog):
 		self.gesturesList.Focus(0)
 		self.gesturesList.Select(0)
 
+	@override
 	def isUnsignedInFocus(self) -> bool:
 		"""Check that the selected gesture is not presented in the Input Gestures dialog.
 		@return: an indication of whether the selected gesture is not presented in the Input gestures dialog
@@ -174,6 +206,7 @@ class UnsignedGesturesDialog(BaseGesturesDialog):
 		category: str = self.gesturesList.GetItemText(self.gesturesList.GetFocusedItem(), 2)
 		return category.startswith("[") and category.endswith("]")
 
+	@override
 	def scriptNameInFocus(self) -> str:
 		"""Extract script name from the item in focus.
 		@return: the name of the script that binded to gesture
@@ -211,11 +244,10 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 		self.Center(wx.BOTH | wx.Center)
 
 		# Fill in the list of available input gestures
-		gestureDisplayText = lambda gest: "{1} ({0})".format(*getDisplayTextForGestureIdentifier(gest))  # noqa E731 do not assign a lambda expression, use a def
 		for gesture in sorted(self.gestures, key=lambda x: x.gesture):
 			self.gesturesList.Append(
 				(
-					gestureDisplayText(gesture.gesture),
+					getGestureDisplayText(gesture.gesture),
 					gesture.displayName or gesture.scriptName,
 					gesture.category or f"[{gesture.moduleName}]",
 				),
@@ -224,6 +256,7 @@ class DuplicatedGesturesDialog(BaseGesturesDialog):
 		self.gesturesList.Focus(0)
 		self.gesturesList.Select(0)
 
+	@override
 	def isUnsignedInFocus(self) -> bool:
 		"""Check that the selected gesture is not presented in the Input Gestures dialog.
 		@return: an indication of whether the selected gesture is not presented in the Input gestures dialog
