@@ -159,7 +159,13 @@ class FakeScriptInfo:
 
 
 class _Manager:
-	def getAllGestureMappings(self) -> dict[str, dict[str, Any]]:
+	"""The input manager of NVDA: the focus for which the gestures are requested is recorded."""
+
+	def __init__(self) -> None:
+		self.requestedFor: list[Any] = []
+
+	def getAllGestureMappings(self, obj: Any = None, ancestors: Any = None) -> dict[str, dict[str, Any]]:
+		self.requestedFor.append((obj, ancestors))
 		return mappings
 
 
@@ -179,6 +185,9 @@ class _MainFrame:
 
 	def __init__(self) -> None:
 		self.sysTrayIcon = _SysTrayIcon()
+		# The focus before the NVDA menu or a dialog has been opened, None when they are closed
+		self.prevFocus: Any = None
+		self.prevFocusAncestors: Any = None
 
 	def popupSettingsDialog(self, dialog: Any, *args: Any, **kwargs: Any) -> None:
 		events.append(("dialog", dialog.__name__, kwargs))

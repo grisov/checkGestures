@@ -27,6 +27,21 @@ class TestGestures(AddonTestCase):
 		self.assertTrue(gesture.isUnsigned)
 		self.assertEqual(gesture.categoryLabel, "[globalPlugins.example]")
 
+	def test_gestures_of_the_program_in_focus(self):
+		import inputCore
+
+		self.base.Gestures().signed()
+		self.assertEqual(inputCore.manager.requestedFor[-1], (None, None))
+
+	def test_gestures_of_the_program_that_had_the_focus_before_the_nvda_menu(self):
+		import gui
+		import inputCore
+
+		self.patch(gui.mainFrame, "prevFocus", "word")
+		self.patch(gui.mainFrame, "prevFocusAncestors", ["desktop"])
+		self.base.Gestures().signed()
+		self.assertEqual(inputCore.manager.requestedFor[-1], ("word", ["desktop"]))
+
 	def test_the_same_gesture_is_added_once(self):
 		gestures = self.base.Gestures()
 		gestures.append(self.base.Gesture("kb:NVDA+x", "Tools", "Speech viewer", "C", "m", "s"))

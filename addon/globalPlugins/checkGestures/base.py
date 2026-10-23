@@ -205,10 +205,19 @@ class Gestures:
 		"""Scan gestures binded to functions with text description
 		wich displayed in the "Input Gestures" dialog.
 		"""
+		import gui
 		import inputCore
 
-		# The input manager of NVDA has incomplete type annotations
-		mapping = cast(Any, inputCore).manager.getAllGestureMappings()
+		# The input manager and the main frame of NVDA have incomplete type annotations
+		manager = cast(Any, inputCore).manager
+		mainFrame = cast(Any, gui.mainFrame)
+		# Like the NVDA Input Gestures dialog: while the NVDA menu or a dialog is open, the gestures of the program
+		# that had the focus before it are searched, otherwise the gestures of the program in focus
+		prevFocus = getattr(mainFrame, "prevFocus", None)
+		if prevFocus is not None:
+			mapping = manager.getAllGestureMappings(obj=prevFocus, ancestors=mainFrame.prevFocusAncestors)
+		else:
+			mapping = manager.getAllGestureMappings()
 		for category in list(mapping):
 			for script in mapping[category]:
 				obj = mapping[category][script]
