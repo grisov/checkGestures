@@ -113,10 +113,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if len(gestures) > 0:
 			self.showGestures(gestures)
 		else:
-			# The pressed button is not needed; "_" cannot take the result, it translates the message below
-			gui.messageBox(  # pyright: ignore[reportUnusedCallResult]
-				# Translators: Notification of no search results
-				message=_("Target gestures not found"),
+			# Translators: Notification of no search results
+			message = _("Target gestures not found")
+			_answer = gui.messageBox(
+				message=message,
 				caption=gestures.title,
 				style=wx.OK | wx.ICON_ERROR,
 				parent=gui.mainFrame,
