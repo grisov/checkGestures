@@ -25,7 +25,7 @@ addon_info = AddonInfo(
 	addon_version="1.2.0",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
-	addon_changelog=_("""The add-on has been tested for compatibility with NVDA 2026.1."""),
+	addon_changelog=_("""Duplicate gestures are shown as a tree and open in the Input Gestures dialog at the selected gesture, new duplicates are shown after NVDA has started, and the empty list in the window of duplicates has been fixed."""),
 	# Author(s)
 	addon_author="Oleksandr Gryshchenko <grisov.nvaccess@mailgw.com>",
 	# URL for the add-on documentation support
