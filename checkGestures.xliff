@@ -1,0 +1,503 @@
+<?xml version="1.0"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en">
+<file id="readme.md" original="https://raw.githubusercontent.com/grisov/checkGestures/a0b98e4b6043b1fd038884ce55565279bf981e5f/readme.md">
+<skeleton>
+# $(ID:6ac71c7c-6065-4b65-a6db-69a98e96fa7b)
+
+* $(ID:6430451f-c7e2-46fe-8bb8-5df208ba7f37)
+* $(ID:527288c2-e447-489f-844b-79274a1c2a0d)
+* $(ID:2849bee4-bdd6-48d2-ab4e-1defa3ccfce5)
+* $(ID:d4031834-24cf-4871-b9c4-e3c8d49fed69)
+
+$(ID:46ae84bc-faf3-412c-96c9-725b0891e668)
+
+$(ID:f6e0cd8b-9afd-4768-8498-be8584ec696b)
+
+## $(ID:4c033219-3f8b-4930-9468-6e00622a9900)
+$(ID:d90cad66-5c92-456f-a09b-ed37bb241ceb)
+
+* $(ID:e6ce5b1f-8f62-4d25-ae22-f622350fc98e)
+* $(ID:b29d4a33-e29b-48ec-8dc2-b2f06969a0b1)
+* $(ID:72da59ce-e9b2-4f96-85c3-e8c3b87965f9)
+
+$(ID:3e118c56-9649-440e-a897-f12244f060f2)
+
+$(ID:b731df46-e9ca-4dc0-8ceb-71942e998397)
+
+$(ID:b6140f39-e42d-4026-a985-3731d09e76ef)
+
+$(ID:9726217e-63fa-4684-acf1-9137fc2fcae7)
+
+## $(ID:2e61026e-4539-4325-8bcf-6399a75f8607)
+$(ID:e47501f6-7166-47f6-af47-012b8a7f5020)
+
+* $(ID:6cb32a6c-79ff-4d57-af0d-4ff327c06158)
+* $(ID:3641ab0b-5b97-4f03-95f4-2469a9639c65)
+
+$(ID:de986f4b-c0fb-4d1f-abc8-154cf3aa4e4c)
+
+$(ID:8095e154-0440-4184-9226-ef3856120232)
+
+## $(ID:6cfd7b1a-3e8f-4cdf-958a-f0162cfe6909)
+$(ID:cabc6274-cfe1-4e06-9fe6-d3b9d2978cb6)
+
+## $(ID:93e79840-ba17-4429-a5bc-74f61103cf67)
+$(ID:d5eae4f9-8679-411b-bd05-f7c208852677)
+
+$(ID:2aa923b5-13a3-483c-a904-262d3ed261b1)
+
+## $(ID:0396b8fb-4a65-434e-809b-16555fd89a4c)
+$(ID:5af43aa0-9064-47a2-b4ad-97a38fdebe2a)
+
+* $(ID:a64b70cc-5016-4bde-92c8-5401f92965fa)
+* $(ID:33d5849d-2574-4db2-a4ea-3c9127fcb45d)
+* $(ID:6cf3dffb-d78b-40f8-9e42-25f3fd64c4cc)
+* $(ID:8f51d3d2-0c77-4458-a8b9-9ee810532882)
+* $(ID:8009a2a6-2b17-4a5e-8f4b-7c2cb2a64695)
+
+## $(ID:22c3b2c4-e24a-4f5c-aac9-4687bd422e0d)
+$(ID:bdd839d8-4e25-4d9a-b3d9-34b9cebfecee)
+
+## $(ID:77b3159f-9660-48a8-b7b6-67c2430f1afe)
+$(ID:4715d2a4-2afb-407f-aaf9-4989ad0011a4)
+
+$(ID:5ae54143-86e7-405e-be7e-9f18f8003229)
+
+* $(ID:545e7a17-ed46-4c59-8c11-2bd1b67f613d)
+* $(ID:cdd3823a-0f74-49c3-bf8d-af1cc41ed52c)
+
+$(ID:6a82f432-d60a-4c33-ba41-531437482b11)
+
+1. $(ID:212564ef-64cc-4cd6-9918-391ebba84010)
+2. $(ID:c73442bd-e516-46f2-8f60-61bfc4be7164)
+3. $(ID:352ef424-2e21-465b-8e40-668ebd9e583d)
+4. $(ID:4b42c64f-915c-4c88-920a-1676a2884890)
+5. $(ID:c66beafc-4d71-4d34-a044-2a419ae8d1af)
+
+$(ID:995b224a-6b1b-42a6-9f0e-12a6780d8cec)
+$(ID:2de33bb2-8251-42fa-9a32-b75cb7a152f7)
+
+</skeleton>
+<unit id="6ac71c7c-6065-4b65-a6db-69a98e96fa7b">
+<notes>
+<note appliesTo="source">line: 2</note>
+<note appliesTo="source">prefix: # </note>
+</notes>
+<segment>
+<source>NVDA Check Input Gestures</source>
+</segment>
+</unit>
+<unit id="6430451f-c7e2-46fe-8bb8-5df208ba7f37">
+<notes>
+<note appliesTo="source">line: 4</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Author: Oleksandr Gryshchenko</source>
+</segment>
+</unit>
+<unit id="527288c2-e447-489f-844b-79274a1c2a0d">
+<notes>
+<note appliesTo="source">line: 5</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Version: 1.2</source>
+</segment>
+</unit>
+<unit id="2849bee4-bdd6-48d2-ab4e-1defa3ccfce5">
+<notes>
+<note appliesTo="source">line: 6</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>NVDA compatibility: 2026.1 and beyond</source>
+</segment>
+</unit>
+<unit id="d4031834-24cf-4871-b9c4-e3c8d49fed69">
+<notes>
+<note appliesTo="source">line: 7</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Installation: through the NVDA Add-on Store ([stable version][1])</source>
+</segment>
+</unit>
+<unit id="46ae84bc-faf3-412c-96c9-725b0891e668">
+<notes>
+<note appliesTo="source">line: 9</note>
+</notes>
+<segment>
+<source>Find and fix the conflicts of input gestures in NVDA and add-ons. Input gestures are the keyboard commands, the commands of braille displays and the gestures of touch screens.</source>
+</segment>
+</unit>
+<unit id="f6e0cd8b-9afd-4768-8498-be8584ec696b">
+<notes>
+<note appliesTo="source">line: 11</note>
+</notes>
+<segment>
+<source>Every installed add-on can add its own input gestures or reassign the existing ones. If the same input gesture is bound to several commands, only one of them works, and the others cannot be used with this gesture.</source>
+</segment>
+</unit>
+<unit id="4c033219-3f8b-4930-9468-6e00622a9900">
+<notes>
+<note appliesTo="source">line: 13</note>
+<note appliesTo="source">prefix: ## </note>
+</notes>
+<segment>
+<source>Search for duplicate gestures</source>
+</segment>
+</unit>
+<unit id="d90cad66-5c92-456f-a09b-ed37bb241ceb">
+<notes>
+<note appliesTo="source">line: 14</note>
+</notes>
+<segment>
+<source>To search for duplicate gestures, open the NVDA menu (NVDA+N), go to "Tools", "Check Input Gestures" and select "Search for duplicate gestures...". If duplicates are found, they are shown in a window as a tree:</source>
+</segment>
+</unit>
+<unit id="e6ce5b1f-8f62-4d25-ae22-f622350fc98e">
+<notes>
+<note appliesTo="source">line: 16</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>each duplicate is a branch with its keys and the keyboard layout in parentheses, e.g. "NVDA+Shift+L (keyboard, all layouts)";</source>
+</segment>
+</unit>
+<unit id="b29d4a33-e29b-48ec-8dc2-b2f06969a0b1">
+<notes>
+<note appliesTo="source">line: 17</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>under the keys, the categories of the commands that use them;</source>
+</segment>
+</unit>
+<unit id="72da59ce-e9b2-4f96-85c3-e8c3b87965f9">
+<notes>
+<note appliesTo="source">line: 18</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>under each category, the commands: the description of the command or the name of its function.</source>
+</segment>
+</unit>
+<unit id="3e118c56-9649-440e-a897-f12244f060f2">
+<notes>
+<note appliesTo="source">line: 20</note>
+</notes>
+<segment>
+<source>All branches are collapsed at first. Use the arrow keys to move through the tree; the Right and Left arrow keys or Enter expand and collapse a branch. Enter on a command opens the NVDA "Input Gestures" dialog with this command and its gesture selected, so you can change or remove the gesture at once.</source>
+</segment>
+</unit>
+<unit id="b731df46-e9ca-4dc0-8ceb-71942e998397">
+<notes>
+<note appliesTo="source">line: 22</note>
+</notes>
+<segment>
+<source>A gesture for all keyboard layouts and the same gesture for the current layout are a duplicate, because both work in the current layout. Then both layouts are shown at the keys, and the layout of each command is shown at the command. The same gestures for different layouts, e.g. desktop and laptop, are not duplicates, because only one layout is used at a time.</source>
+</segment>
+</unit>
+<unit id="b6140f39-e42d-4026-a985-3731d09e76ef">
+<notes>
+<note appliesTo="source">line: 24</note>
+</notes>
+<segment>
+<source>Commands without a description are not shown in the "Input Gestures" dialog, so their gestures cannot be changed there. The name of their module is shown in square brackets instead of the category, and a warning is shown when such a command is selected.</source>
+</segment>
+</unit>
+<unit id="9726217e-63fa-4684-acf1-9137fc2fcae7">
+<notes>
+<note appliesTo="source">line: 26</note>
+</notes>
+<segment>
+<source>The search covers the gestures that are available where the focus is: the global commands of NVDA, the global plugins of the add-ons and the program in focus. When the search is started from the NVDA menu, this is the program that had the focus before the menu was opened, as in the NVDA "Input Gestures" dialog. The gestures that work only in other programs are checked when one of those programs has the focus.</source>
+</segment>
+</unit>
+<unit id="2e61026e-4539-4325-8bcf-6399a75f8607">
+<notes>
+<note appliesTo="source">line: 28</note>
+<note appliesTo="source">prefix: ## </note>
+</notes>
+<segment>
+<source>Search when NVDA starts</source>
+</segment>
+</unit>
+<unit id="e47501f6-7166-47f6-af47-012b8a7f5020">
+<notes>
+<note appliesTo="source">line: 29</note>
+</notes>
+<segment>
+<source>A few seconds after NVDA has started, when the add-ons have been loaded, the add-on searches for duplicate gestures. The window with the duplicates appears only if there are duplicates that you have not seen before, e.g. after an add-on has been installed. If there are no new duplicates, nothing is shown. The duplicates found depend on the program in focus, so the duplicates you have seen are kept even if they are not found when NVDA starts. A seen duplicate of the commands of NVDA or of the global commands of add-ons is forgotten as soon as it is not found, e.g. after it has been resolved; a seen duplicate that depends on the focus, e.g. of a program, is forgotten if it has not been found for 90 days.</source>
+</segment>
+</unit>
+<unit id="6cb32a6c-79ff-4d57-af0d-4ff327c06158">
+<notes>
+<note appliesTo="source">line: 31</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>OK - the duplicates in the window are remembered, and the window appears again only when new duplicates appear.</source>
+</segment>
+</unit>
+<unit id="3641ab0b-5b97-4f03-95f4-2469a9639c65">
+<notes>
+<note appliesTo="source">line: 32</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Cancel or Escape - the duplicates are not remembered, and the same window appears again when NVDA starts next time.</source>
+</segment>
+</unit>
+<unit id="de986f4b-c0fb-4d1f-abc8-154cf3aa4e4c">
+<notes>
+<note appliesTo="source">line: 34</note>
+</notes>
+<segment>
+<source>The "Don't show this window on startup" check box at the bottom of the window turns off the search when NVDA starts. The search from the NVDA menu always shows all duplicates, so the search on startup can be turned on again with the same check box. By default the search on startup is on. After the add-on has been installed, all existing duplicates are new, so the window appears when NVDA starts if there are any duplicates.</source>
+</segment>
+</unit>
+<unit id="8095e154-0440-4184-9226-ef3856120232">
+<notes>
+<note appliesTo="source">line: 36</note>
+</notes>
+<segment>
+<source>The remembered duplicates and the check box are saved in the checkGestures.json file in the NVDA configuration folder at once, even if NVDA is set not to save its configuration on exit.</source>
+</segment>
+</unit>
+<unit id="6cfd7b1a-3e8f-4cdf-958a-f0162cfe6909">
+<notes>
+<note appliesTo="source">line: 38</note>
+<note appliesTo="source">prefix: ## </note>
+</notes>
+<segment>
+<source>Gestures without description</source>
+</segment>
+</unit>
+<unit id="cabc6274-cfe1-4e06-9fe6-d3b9d2978cb6">
+<notes>
+<note appliesTo="source">line: 39</note>
+</notes>
+<segment>
+<source>To see the gestures bound to commands without a description, open the NVDA menu, go to "Tools", "Check Input Gestures" and select "Gestures without description...". Such commands are not shown in the NVDA "Input Gestures" dialog, so their gestures cannot be changed or removed there.</source>
+</segment>
+</unit>
+<unit id="93e79840-ba17-4429-a5bc-74f61103cf67">
+<notes>
+<note appliesTo="source">line: 41</note>
+<note appliesTo="source">prefix: ## </note>
+</notes>
+<segment>
+<source>Commands</source>
+</segment>
+</unit>
+<unit id="d5eae4f9-8679-411b-bd05-f7c208852677">
+<notes>
+<note appliesTo="source">line: 42</note>
+</notes>
+<segment>
+<source>Both searches can also be run with a command. The commands are listed in the NVDA "Input Gestures" dialog, in the "Check Input Gestures" category, where you can assign your own shortcuts to them. They have no default shortcuts.</source>
+</segment>
+</unit>
+<unit id="2aa923b5-13a3-483c-a904-262d3ed261b1">
+<notes>
+<note appliesTo="source">line: 44</note>
+</notes>
+<segment>
+<source>To open this help page, open the NVDA menu, go to "Tools", "Check Input Gestures" and select "Help".</source>
+</segment>
+</unit>
+<unit id="0396b8fb-4a65-434e-809b-16555fd89a4c">
+<notes>
+<note appliesTo="source">line: 46</note>
+<note appliesTo="source">prefix: ## </note>
+</notes>
+<segment>
+<source>Contributions</source>
+</segment>
+</unit>
+<unit id="5af43aa0-9064-47a2-b4ad-97a38fdebe2a">
+<notes>
+<note appliesTo="source">line: 47</note>
+</notes>
+<segment>
+<source>We are very grateful to everyone who made the effort to develop, translate and maintain this add-on:</source>
+</segment>
+</unit>
+<unit id="a64b70cc-5016-4bde-92c8-5401f92965fa">
+<notes>
+<note appliesTo="source">line: 49</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Jani Kinnunen - Finnish translation;</source>
+</segment>
+</unit>
+<unit id="33d5849d-2574-4db2-a4ea-3c9127fcb45d">
+<notes>
+<note appliesTo="source">line: 50</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Wafiqtaher - Arabic translation;</source>
+</segment>
+</unit>
+<unit id="6cf3dffb-d78b-40f8-9e42-25f3fd64c4cc">
+<notes>
+<note appliesTo="source">line: 51</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Angelo Miguel Abrantes - Portuguese translation;</source>
+</segment>
+</unit>
+<unit id="8f51d3d2-0c77-4458-a8b9-9ee810532882">
+<notes>
+<note appliesTo="source">line: 52</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Cagri Dogan - Turkish translation;</source>
+</segment>
+</unit>
+<unit id="8009a2a6-2b17-4a5e-8f4b-7c2cb2a64695">
+<notes>
+<note appliesTo="source">line: 53</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>Cary Rowen - simplified Chinese translation.</source>
+</segment>
+</unit>
+<unit id="22c3b2c4-e24a-4f5c-aac9-4687bd422e0d">
+<notes>
+<note appliesTo="source">line: 55</note>
+<note appliesTo="source">prefix: ## </note>
+</notes>
+<segment>
+<source>Change log</source>
+</segment>
+</unit>
+<unit id="bdd839d8-4e25-4d9a-b3d9-34b9cebfecee">
+<notes>
+<note appliesTo="source">line: 56</note>
+</notes>
+<segment>
+<source>The history of changes for each version of the add-on is published on the [Releases page][2] of the add-on repository.</source>
+</segment>
+</unit>
+<unit id="77b3159f-9660-48a8-b7b6-67c2430f1afe">
+<notes>
+<note appliesTo="source">line: 58</note>
+<note appliesTo="source">prefix: ## </note>
+</notes>
+<segment>
+<source>Altering of add-on source code</source>
+</segment>
+</unit>
+<unit id="4715d2a4-2afb-407f-aaf9-4989ad0011a4">
+<notes>
+<note appliesTo="source">line: 59</note>
+</notes>
+<segment>
+<source>You may clone this repo to make alterations to NVDA Check Input Gestures.</source>
+</segment>
+</unit>
+<unit id="5ae54143-86e7-405e-be7e-9f18f8003229">
+<notes>
+<note appliesTo="source">line: 61</note>
+</notes>
+<segment>
+<source>Requirements:</source>
+</segment>
+</unit>
+<unit id="545e7a17-ed46-4c59-8c11-2bd1b67f613d">
+<notes>
+<note appliesTo="source">line: 63</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>[uv](https://docs.astral.sh/uv/) - manages Python and all development tools of the add-on;</source>
+</segment>
+</unit>
+<unit id="cdd3823a-0f74-49c3-bf8d-af1cc41ed52c">
+<notes>
+<note appliesTo="source">line: 64</note>
+<note appliesTo="source">prefix: * </note>
+</notes>
+<segment>
+<source>[GNU Gettext tools](https://mlocati.github.io/articles/gettext-iconv-windows.html) (`msgfmt` and `xgettext` in the `PATH`) - compile translations and generate the template of translatable strings.</source>
+</segment>
+</unit>
+<unit id="6a82f432-d60a-4c33-ba41-531437482b11">
+<notes>
+<note appliesTo="source">line: 66</note>
+</notes>
+<segment>
+<source>Run the following commands from the root of the repository:</source>
+</segment>
+</unit>
+<unit id="212564ef-64cc-4cd6-9918-391ebba84010">
+<notes>
+<note appliesTo="source">line: 68</note>
+<note appliesTo="source">prefix: 1. </note>
+</notes>
+<segment>
+<source>`uv sync` - install the development dependencies;</source>
+</segment>
+</unit>
+<unit id="c73442bd-e516-46f2-8f60-61bfc4be7164">
+<notes>
+<note appliesTo="source">line: 69</note>
+<note appliesTo="source">prefix: 2. </note>
+</notes>
+<segment>
+<source>`uv run prek run --all-files` - run all code checks: linting and formatting with ruff, type checking with pyright and other checks;</source>
+</segment>
+</unit>
+<unit id="352ef424-2e21-465b-8e40-668ebd9e583d">
+<notes>
+<note appliesTo="source">line: 70</note>
+<note appliesTo="source">prefix: 3. </note>
+</notes>
+<segment>
+<source>`uv run python -m unittest discover -s tests -v` - run the unit tests;</source>
+</segment>
+</unit>
+<unit id="4b42c64f-915c-4c88-920a-1676a2884890">
+<notes>
+<note appliesTo="source">line: 71</note>
+<note appliesTo="source">prefix: 4. </note>
+</notes>
+<segment>
+<source>`uv run scons` - build the add-on, the created `.nvda-addon` file is placed in the root of the repository;</source>
+</segment>
+</unit>
+<unit id="c66beafc-4d71-4d34-a044-2a419ae8d1af">
+<notes>
+<note appliesTo="source">line: 72</note>
+<note appliesTo="source">prefix: 5. </note>
+</notes>
+<segment>
+<source>`uv run scons pot` - generate the `.pot` file with all translatable strings of the add-on (optional).</source>
+</segment>
+</unit>
+<unit id="995b224a-6b1b-42a6-9f0e-12a6780d8cec">
+<notes>
+<note appliesTo="source">line: 74</note>
+</notes>
+<segment>
+<source>[1]: https://addonstore.nvaccess.org/?channel=stable&amp;addonId=checkGestures</source>
+</segment>
+</unit>
+<unit id="2de33bb2-8251-42fa-9a32-b75cb7a152f7">
+<notes>
+<note appliesTo="source">line: 75</note>
+</notes>
+<segment>
+<source>[2]: https://github.com/grisov/checkGestures/releases</source>
+</segment>
+</unit>
+</file>
+</xliff>
